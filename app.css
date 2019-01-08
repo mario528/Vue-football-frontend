@@ -1,0 +1,72 @@
+.theme-background-color {
+    background-color: green;
+}
+.container {
+    width: 100vw;
+    height: 100vh;
+}
+.page {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+.flex-row-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.flex-row-x-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.flex-row-y-center {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.flex-row-space-between {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+}
+.flex-row-space-around {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+.flex-column-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.flex-column-x-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.flex-column-y-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+.fixed-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
