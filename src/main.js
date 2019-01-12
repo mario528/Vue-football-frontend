@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store/index.js'
 
+import 'lib-flexible'
 import '../app.css'
 Vue.config.productionTip = false
 /* eslint-disable no-new */

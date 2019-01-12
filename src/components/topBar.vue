@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-12 15:45:26
+ * @LastEditTime: 2019-01-12 17:23:10
  * @Description: file content
  -->
 <template>
@@ -107,14 +107,14 @@ export default {
   background-color: rgb(82, 173, 75);
   padding: 10px 20px 10px 20px;
   text-decoration: none;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: 500;
 }
 .switch-item-active {
   padding: 10px 20px 10px 20px;
   border-radius: 10px;
   text-decoration: none;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: 500;
   background-color: white;
   color: rgb(82, 173, 75);
