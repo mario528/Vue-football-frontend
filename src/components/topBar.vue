@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-12 17:23:10
+ * @LastEditTime: 2019-01-14 15:38:10
  * @Description: file content
  -->
 <template>
@@ -26,10 +26,10 @@
         </router-link>
       </div>
       <div class="user-area">
-        <div class="user-unLogin flex-row" v-if="!isLogin" v-on:click="actionToLogin">
-          <div class="user-operation-btn">登录</div>
+        <div class="user-unLogin flex-row" v-if="!isLogin" v-on:click="changeDialogState">
+          <div class="user-operation-btn" id="0">登录</div>
           <div class="user-operation-btn">|</div>
-          <div class="user-operation-btn">注册</div>
+          <div class="user-operation-btn" id="1">注册</div>
         </div>
         <div class="user-login flex-row-y-center" v-else
              v-on:click="actionUserSetting">
@@ -38,7 +38,7 @@
         </div>
           <div class="user-setting-area"
                v-if="userSettingShow">
-               <div class="user-setting-item flex-row">个人中心</div>
+               <router-link to="/userCenter"><div class="user-setting-item flex-row">个人中心</div></router-link>
                <div class="user-setting-item flex-row">消息</div>
                <div class="user-setting-item flex-row-y-center">
                  退出
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import {mapActions, mapGetters, mapState} from 'vuex'
 export default {
   name: 'TopBar',
   components: {
@@ -58,21 +59,26 @@ export default {
   data () {
     return {
       currentIndex: 0,
-      isLogin: false,
       userSettingShow: false
     }
   },
   watch: {},
   computed: {
+     ...mapState([
+         "isLogin"
+     ])
   },
   methods: {
+    ...mapActions ([
+      "changeDialogState"
+    ]),
     catchSwitchTab (ev) {
       this.currentIndex = ev.target.id
     },
     actionUserSetting () {
       this.userSettingShow = !this.userSettingShow
     },
-    actionToLogin () {}
+    actionToLogin () {},
   },
   created () {},
   mounted () {

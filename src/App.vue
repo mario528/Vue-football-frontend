@@ -2,6 +2,7 @@
   <div id="app">
     <top-bar></top-bar>
     <login-or-register></login-or-register>
+    <router-view></router-view>
   </div>
 </template>
 

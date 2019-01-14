@@ -1,28 +1,35 @@
 <template>
-  <div v-if="dialogShow">
+  <div v-if="getLoginState">
       <div class="container popup-menu flex-row-center">
           <div class="card-place" v-if="state == 0">
               <img v-bind:src="iconShow" class="animal-icon"/>
               <div class="flex-row-space-between menu-title">
                     <span class="menu-title-text">登录</span>
-                    <img  class="menu-close" src="../../assets/close_common.png" v-on:click="closeDialog"/>
+                    <img  class="menu-close" src="../../assets/close_common.png" v-on:click="changeDialogState"/>
               </div>
               <div class="card-input flex-column">
-                  <input class="user-input" placeholder="请输入用户名或手机号" v-model="userName" 
+                  <input class="user-input" placeholder="请输入用户名或手机号" v-model="loginData.userName"
                          v-on:focus="userNameFocus" v-on:blur="userBlur"/>
-                  <input type="password" class="user-input" placeholder="请输入密码" v-model="password"
+                  <input type="password" class="user-input" placeholder="请输入密码" v-model="loginData.password"
                          v-on:focus="passwordFocus" v-on:blur="userBlur"/>
                   <button class="card-btn theme-background-color">登陆</button>
               </div>
               <div class="card-bottom flex-row-space-between">
-                 <div>没有账号？<span class="bottom-text" v-on:click="actionToRegister">注册</span></div>
+                 <div>没有账号？<span class="bottom-text" v-on:click="actionSwitchTab">注册</span></div>
                  <span class="bottom-text">忘记密码</span>
               </div>
           </div>
           <div class="card-place" v-else>
                <div class="flex-row-space-between menu-title">
-                    <span class="menu-title">注册</span>
-                    <img  class="menu-close" src="../../assets/close_common.png" v-on:click="closeDialog"/>
+                    <span class="menu-title-text">注册</span>
+                    <img  class="menu-close" src="../../assets/close_common.png" v-on:click="changeDialogState"/>
+              </div>
+               <div class="card-input flex-column">
+                  <input class="user-input" placeholder="请输入用户名" v-model="registerData.userName"/>
+                  <input class="user-input" placeholder="请输入手机号" v-model="registerData.telephone"/>
+                  <input type="password" class="user-input" placeholder="请输入密码" v-model="registerData.password"/>
+                  <button class="card-btn theme-background-color">注册</button>
+                  <span class="bottom-text" style="text-align: center" v-on:click="actionSwitchTab">已有账号登陆</span>
               </div>
           </div>
       </div>
@@ -30,42 +37,66 @@
 </template>
 
 <script>
+import { mapGetters, mapActions, mapState} from "vuex";
+
 import animalIconCommon from '../../assets/common_login_icon.png'
 import animalIconActive from '../../assets/common_login_active.png'
 import animalIconPassword from '../../assets/common_login_password.png'
 export default {
   name: 'LoginOrRegister',
   components: {},
-  props: {},
+  props: [],
   data () {
     return {
       state: 0, // 0: 登录 1: 注册
-      dialogShow: true,
+      dialogShow: false,
       iconShow: animalIconCommon,
-      userName: undefined,
-      password: undefined,
-    //   inputState: 0 // 0:animalIconCommon 1:animalIconActive 2: animalIconPassword
+      loginData: {
+        userName: undefined,
+        password: undefined
+      },
+      registerData: {
+        userName: undefined,
+        password: undefined,
+        telephone: undefined
+      }
     }
   },
   watch: {
   },
-  computed: {},
+  computed:{
+     ...mapState([
+         "userDialogNum"
+     ]),
+     ...mapGetters([
+         "getLoginState"
+     ]),
+  },
   methods: {
-      userNameFocus() {
-          this.iconShow = animalIconActive
-      },
-      userBlur() {
-          this.iconShow = animalIconCommon
-      },
-      passwordFocus() {
-          this.iconShow = animalIconPassword
-      },
-      closeDialog() {
-          this.dialogShow = false
-      },
-      actionToRegister() {
-          this.state = 1
+    ...mapActions([
+      "changeDialogState"
+    ]),
+    userNameFocus () {
+      this.iconShow = animalIconActive
+    },
+    userBlur () {
+      this.iconShow = animalIconCommon
+    },
+    passwordFocus () {
+      this.iconShow = animalIconPassword
+    },
+    actionSwitchTab () {
+      this.loginData = {
+        userName: '',
+        password: ''
       }
+      this.registerData = {
+        userName: '',
+        password: '',
+        telephone: ''
+      }
+      this.state === 1 ? this.state = 0 : this.state = 1
+    }
   },
   created () {},
   mounted () {}
@@ -95,8 +126,10 @@ export default {
 .menu-title {
     width: 80%;
     margin-left: 10%;
-    margin-top: 20px;
+    margin-top: 40px;
     align-items: center;
+    height: 40px;
+    border-bottom: 2px solid rgb(82, 173, 75);
 }
 .menu-title-text {
     font-size: 16px;
@@ -107,21 +140,22 @@ export default {
     width: 80px;
     height: 80px;
     top: -60px;
-    left: calc(10vw);
+    left: calc(10vw + 40px);
 }
 .card-input {
     width: 80%;
     margin-left: 10%;
+    margin-top: 10px;
 }
 .user-input {
     width: 100%;
     height: 30px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 .card-btn {
     width: 100%;
-    height: 30px;
-    margin-top: 10px;
+    height: 40px;
+    margin-top: 20px;
     color: white;
     font-size: 11px;
     font-weight: 500;
@@ -129,9 +163,10 @@ export default {
 .card-bottom {
     width: 80%;
     margin-left: 10%;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 .bottom-text {
     color: rgb(82, 173, 75);
+    margin-top: 5px;
 }
 </style>
