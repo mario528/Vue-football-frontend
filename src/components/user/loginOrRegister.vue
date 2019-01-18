@@ -1,7 +1,7 @@
 <template>
   <div v-if="getLoginState">
       <div class="container popup-menu flex-row-center">
-          <div class="card-place" v-if="state == 0">
+          <div class="card-place" v-if="userDialogNum == 0">
               <img v-bind:src="iconShow" class="animal-icon"/>
               <div class="flex-row-space-between menu-title">
                     <span class="menu-title-text">登录</span>
@@ -12,7 +12,7 @@
                          v-on:focus="userNameFocus" v-on:blur="userBlur"/>
                   <input type="password" class="user-input" placeholder="请输入密码" v-model="loginData.password"
                          v-on:focus="passwordFocus" v-on:blur="userBlur"/>
-                  <button class="card-btn theme-background-color">登陆</button>
+                  <button class="card-btn theme-background-color" v-on:click="actionToLogin">登陆</button>
               </div>
               <div class="card-bottom flex-row-space-between">
                  <div>没有账号？<span class="bottom-text" v-on:click="actionSwitchTab">注册</span></div>
@@ -28,23 +28,30 @@
                   <input class="user-input" placeholder="请输入用户名" v-model="registerData.userName"/>
                   <input class="user-input" placeholder="请输入手机号" v-model="registerData.telephone"/>
                   <input type="password" class="user-input" placeholder="请输入密码" v-model="registerData.password"/>
-                  <button class="card-btn theme-background-color">注册</button>
+                  <button class="card-btn theme-background-color" v-on:click="actionToRegister">注册</button>
                   <span class="bottom-text" style="text-align: center" v-on:click="actionSwitchTab">已有账号登陆</span>
               </div>
           </div>
+          <toast v-if="showToast" :msg="toastMsg" :status="toastStatus"></toast>
       </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions, mapState} from "vuex";
+import { mapGetters, mapActions, mapState} from 'vuex'
 
 import animalIconCommon from '../../assets/common_login_icon.png'
 import animalIconActive from '../../assets/common_login_active.png'
 import animalIconPassword from '../../assets/common_login_password.png'
+
+import Toast from '@/components/common/toast'
+import URL from '@/api/url.js'
+import axios from '@/api/axios.js'
 export default {
   name: 'LoginOrRegister',
-  components: {},
+  components: {
+    Toast
+  },
   props: [],
   data () {
     return {
@@ -59,22 +66,25 @@ export default {
         userName: undefined,
         password: undefined,
         telephone: undefined
-      }
+      },
+      showToast: false,
+      toastMsg: '',
+      toastStatus: undefined
     }
   },
   watch: {
   },
-  computed:{
-     ...mapState([
-         "userDialogNum"
-     ]),
-     ...mapGetters([
-         "getLoginState"
-     ]),
+  computed: {
+    ...mapState([
+      'userDialogNum'
+    ]),
+    ...mapGetters([
+      'getLoginState'
+    ])
   },
   methods: {
     ...mapActions([
-      "changeDialogState"
+      'changeDialogState'
     ]),
     userNameFocus () {
       this.iconShow = animalIconActive
@@ -84,6 +94,21 @@ export default {
     },
     passwordFocus () {
       this.iconShow = animalIconPassword
+    },
+    actionToLogin () {
+      if (this.loginData.userName == '' || this.loginData.userName == undefined) {
+        this.showToast = true
+        this.toastMsg = '请输入正确的用户名'
+        this.toastStatus = 'fail'
+      } else if (this.loginData.password == '' || this.loginData.password == undefined) {
+        this.showToast = true
+        this.toastMsg = '请输入正确的密码',
+        this.toastStatus = 'fail'
+      }
+    },
+    //注册模块
+    actionToRegister() {
+
     },
     actionSwitchTab () {
       this.loginData = {

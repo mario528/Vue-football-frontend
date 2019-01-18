@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-14 15:38:10
+ * @LastEditTime: 2019-01-18 15:36:27
  * @Description: file content
  -->
 <template>
@@ -26,7 +26,7 @@
         </router-link>
       </div>
       <div class="user-area">
-        <div class="user-unLogin flex-row" v-if="!isLogin" v-on:click="changeDialogState">
+        <div class="user-unLogin flex-row" v-if="!isLogin" v-on:click="changeDialogStateBox">
           <div class="user-operation-btn" id="0">登录</div>
           <div class="user-operation-btn">|</div>
           <div class="user-operation-btn" id="1">注册</div>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex'
+import {mapActions, mapGetters, mapState, mapMutations} from 'vuex'
 export default {
   name: 'TopBar',
   components: {
@@ -64,21 +64,28 @@ export default {
   },
   watch: {},
   computed: {
-     ...mapState([
-         "isLogin"
-     ])
+    ...mapState([
+      'isLogin'
+    ])
   },
   methods: {
-    ...mapActions ([
-      "changeDialogState"
+    ...mapMutations([
+      'CHANGE_LOGIN_DIALOG_STATE'
+    ]),
+    ...mapActions([
+      'changeDialogState'
     ]),
     catchSwitchTab (ev) {
       this.currentIndex = ev.target.id
     },
+    changeDialogStateBox (ev) {
+      const currentIndex = ev.target.id;
+      this.$store.commit('CHANGE_LOGIN_DIALOG_STATE',{currentIndex:currentIndex})
+    },
     actionUserSetting () {
       this.userSettingShow = !this.userSettingShow
     },
-    actionToLogin () {},
+    actionToLogin () {}
   },
   created () {},
   mounted () {

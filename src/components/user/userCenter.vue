@@ -25,7 +25,6 @@
               </div>
           </div>
           <div class="history-detail">
-              11111
           </div>
       </div>
   </div>
@@ -35,26 +34,26 @@
 import {mapState, mapActions, mapGetters} from 'vuex'
 export default {
   name: 'userCenter',
-  components:{},
-  props:{},
-  data(){
+  components: {},
+  props: {},
+  data () {
     return {
-        currentIndex: 0
+      currentIndex: 0
     }
   },
-  watch:{},
-  computed:{
-      ...mapState([
-          'userName'
-      ])
+  watch: {},
+  computed: {
+    ...mapState([
+      'userName'
+    ])
   },
-  methods:{
-      catchSwitchTab(ev) {
-          this.currentIndex = ev.target.id
-      }
+  methods: {
+    catchSwitchTab (ev) {
+      this.currentIndex = ev.target.id
+    }
   },
-  created(){},
-  mounted(){}
+  created () {},
+  mounted () {}
 }
 </script>
 <style scoped>
@@ -84,7 +83,7 @@ export default {
     position: absolute;
     right: 10px;
     bottom: 10px;
-} 
+}
 .user-tab-normal {
     width: 10vw;
     height: 40px;

@@ -4,15 +4,22 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store/index'
+import axios from 'axios'
 
 import 'lib-flexible'
 import '../app.css'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+
+Vue.prototype.$http = axios
 Vue.config.productionTip = false
+Vue.use(ElementUI)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
+  axios,
   components: { App },
   template: '<App/>'
 })
