@@ -2,109 +2,141 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-18 15:36:27
+ * @LastEditTime: 2019-01-19 14:21:19
  * @Description: file content
  -->
 <template>
   <div class="app theme-background-color page flex-row-y-center">
-      <div class="company-detail flex-row-y-center">
-        <img class="company-icon" src="../assets/compony_icon.png"/>
-        <div class="company-title">懂球帝</div>
+    <div class="company-detail flex-row-y-center">
+      <img class="company-icon" src="../assets/compony_icon.png">
+      <div class="company-title" v-on:click="handleCommand('homePage')">懂球帝</div>
+    </div>
+    <div class="switch-bar" v-on:click="catchSwitchTab">
+      <router-link to="/home">
+        <span v-bind:class="currentIndex==0?'switch-item-active':'switch-item'" id="0">首页</span>
+      </router-link>
+      <router-link to="/home">
+        <span v-bind:class="currentIndex==1?'switch-item-active':'switch-item'" id="1">数据</span>
+      </router-link>
+      <router-link to="/home">
+        <span v-bind:class="currentIndex==2?'switch-item-active':'switch-item'" id="2">球迷圈</span>
+      </router-link>
+      <router-link to="/home">
+        <span v-bind:class="currentIndex==3?'switch-item-active':'switch-item'" id="3">官方新闻</span>
+      </router-link>
+    </div>
+    <div class="tab-bar-search">
+      <el-input
+        placeholder="点击立即搜索"
+        suffix-icon="el-icon-search"
+        v-model="userSearch">
+       </el-input>
+    </div>
+    <div class="user-area">
+      <div class="user-unLogin flex-row" v-if="!isLogin" v-on:click="changeDialogStateBox">
+        <div class="user-operation-btn" id="0">登录</div>
+        <div class="user-operation-btn">|</div>
+        <div class="user-operation-btn" id="1">注册</div>
       </div>
-      <div class="switch-bar" v-on:click="catchSwitchTab">
-        <router-link to="/home">
-          <span v-bind:class="currentIndex==0?'switch-item-active':'switch-item'" id="0">首页</span>
-        </router-link>
-        <router-link to="/home">
-          <span v-bind:class="currentIndex==1?'switch-item-active':'switch-item'" id="1">数据</span>
-        </router-link>
-        <router-link to="/home">
-          <span v-bind:class="currentIndex==2?'switch-item-active':'switch-item'" id="2">球迷圈</span>
-        </router-link>
-         <router-link to="/home">
-          <span v-bind:class="currentIndex==3?'switch-item-active':'switch-item'" id="3">官方新闻</span>
-        </router-link>
-      </div>
-      <div class="user-area">
-        <div class="user-unLogin flex-row" v-if="!isLogin" v-on:click="changeDialogStateBox">
-          <div class="user-operation-btn" id="0">登录</div>
-          <div class="user-operation-btn">|</div>
-          <div class="user-operation-btn" id="1">注册</div>
+      <el-dropdown v-else @command="handleCommand">
+        <div class="user-login flex-row-y-center" v-on:hover="actionUserSetting">
+          <img class="user-topbar-icon" src="../assets/user_icon_test.png">
+          <img
+            class="state-arrow"
+            v-bind:src="userSettingShow == false?require('../assets/pull_down.png'):require('../assets/pack_up.png')"
+          >
         </div>
-        <div class="user-login flex-row-y-center" v-else
-             v-on:click="actionUserSetting">
-          <img class="user-topbar-icon" src="../assets/user-icon-test.png" />
-          <img class="state-arrow" v-bind:src="userSettingShow == false?require('../assets/pull_down.png'):require('../assets/pack_up.png')">
-        </div>
-          <div class="user-setting-area"
-               v-if="userSettingShow">
-               <router-link to="/userCenter"><div class="user-setting-item flex-row">个人中心</div></router-link>
-               <div class="user-setting-item flex-row">消息</div>
-               <div class="user-setting-item flex-row-y-center">
-                 退出
-                 <img class="user-setting-item-icon" src="../assets/check_out.png" />
-               </div>
-          </div>
-      </div>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="usercenter" class="drop-item">用户中心</el-dropdown-item>
+          <el-dropdown-item command="changeInfo" class="drop-item">修改信息</el-dropdown-item>
+          <el-dropdown-item command="logout" class="drop-item">退出登陆</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
   </div>
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState, mapMutations} from 'vuex'
+import { mapActions, mapGetters, mapState, mapMutations } from "vuex";
 export default {
-  name: 'TopBar',
-  components: {
-  },
+  name: "TopBar",
+  components: {},
   props: {},
-  data () {
+  data() {
     return {
       currentIndex: 0,
-      userSettingShow: false
-    }
+      userSettingShow: false,
+      userSearch: undefined
+    };
   },
   watch: {},
   computed: {
-    ...mapState([
-      'isLogin'
-    ])
+    ...mapState(["isLogin"])
   },
   methods: {
-    ...mapMutations([
-      'CHANGE_LOGIN_DIALOG_STATE'
-    ]),
-    ...mapActions([
-      'changeDialogState'
-    ]),
-    catchSwitchTab (ev) {
-      this.currentIndex = ev.target.id
+    ...mapMutations(["CHANGE_LOGIN_DIALOG_STATE"]),
+    ...mapActions(["changeDialogState", "logout"]),
+    toast() {
+      const that = this;
+      this.$notify({
+          title: '成功',
+          message: '账号推出成功',
+          type: 'success'
+      });
+      this.logout();
+      this.$router.push('/home')
     },
-    changeDialogStateBox (ev) {
+    catchSwitchTab(ev) {
+      this.currentIndex = ev.target.id;
+    },
+    changeDialogStateBox(ev) {
       const currentIndex = ev.target.id;
-      this.$store.commit('CHANGE_LOGIN_DIALOG_STATE',{currentIndex:currentIndex})
+      this.$store.commit("CHANGE_LOGIN_DIALOG_STATE", {
+        currentIndex: currentIndex
+      });
     },
-    actionUserSetting () {
-      this.userSettingShow = !this.userSettingShow
+    actionUserSetting() {
+      this.userSettingShow = !this.userSettingShow;
     },
-    actionToLogin () {}
+    actionLogout() {},
+    actionToLogin() {},
+    handleCommand(command) {
+      switch (command) {
+        case "usercenter":
+          this.$router.push("/userCenter");
+          break;
+        case "changeInfo":
+          this.$router.push("/userChangeInfo");
+          break;
+        case "logout":
+          this.toast();
+          break;
+        case "homePage":
+          this.$router.push("/home");
+          break;
+      }
+    }
   },
-  created () {},
-  mounted () {
-  }
-}
+  created() {},
+  mounted() {}
+};
 </script>
 <style scoped>
 .app {
   width: 100vw;
   height: 80px;
   position: relative;
+  background-color: rgb(82, 173, 75);
 }
 .company-detail {
   margin-left: 10vw;
+  cursor: pointer;
 }
 .company-title {
   color: white;
   font-size: 30px;
-  font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+  font-family: Helvetica, "Hiragino Sans GB", "Microsoft Yahei", "微软雅黑",
+    Arial, sans-serif;
   margin-left: 5px;
   font-weight: 600;
 }
@@ -122,6 +154,7 @@ export default {
   text-decoration: none;
   font-size: 20px;
   font-weight: 500;
+  cursor: pointer;
 }
 .switch-item-active {
   padding: 10px 20px 10px 20px;
@@ -131,6 +164,7 @@ export default {
   font-weight: 500;
   background-color: white;
   color: rgb(82, 173, 75);
+  cursor: pointer;
 }
 .switch-item:hover {
   border-radius: 10px;
@@ -153,24 +187,15 @@ export default {
   margin-left: 5px;
   font-weight: 500;
 }
-.user-setting-area {
-  width: 80px;
-  color: rgb(82, 173, 75);
-  font-weight: 500;
-  background-color:white;
-  border-bottom: 1px solid white;
-  position: absolute;
-  top: 35px;
-}
-.user-setting-item {
-  padding: 10px 0 10px 0;
-}
-.user-setting-item-icon {
-  widows: 20px;
-  height: 20px;
-}
 .state-arrow {
   width: 20px;
   height: 20px;
+}
+.drop-item:hover {
+  background-color: rgb(82, 173, 75);
+  color: white;
+}
+.tab-bar-search {
+  margin-left: 18%;
 }
 </style>

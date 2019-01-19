@@ -1,0 +1,183 @@
+<template>
+  <div class="container flex-row-x-center">
+    <div class="user-info">
+      <div class="userinfo-title">个人资料</div>
+      <div class="information-item">
+        <div class="flex-row-y-center">
+          <div class="item-title">头像</div>
+          <img class="user-icon" src="../../assets/user_icon_test.png">
+          <div class="upload-detail">
+            <span class="upload-tips">支持jpg,png格式大小5M以内的图片</span>
+            <el-upload
+              class="upload-demo"
+              action=""
+              ref="upload"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :file-list="fileList"
+              :auto-upload="false"
+            >
+              <el-button slot="trigger" size="small" type="primary" class="file-btn">选取文件</el-button>
+              <el-button style="margin-left: 10px;" size="small" type="success" @click="actionToLoadHeadIcon" class="file-btn">上传到服务器</el-button>
+            </el-upload>
+          </div>
+        </div>
+      </div>
+      <div class="information-item flex-row-x-center" v-for="(item,index) in infoList" v-bind:key="index">
+        <div class="item-left flex-row">
+          <div class="item-title">{{item.title}}</div>
+          <div class="item-class" v-if="!item.isShow">{{userName}}</div>
+          <div class="item-input" v-if="item.placeholder && item.isShow">
+            <input type="text" class="user-input" v-bind:placeholder="item.placeholder" />
+          </div>
+        </div>
+        <div class="item-change" v-bind:id="index" v-on:click="actionToChangeInfo" v-if="!item.isShow">
+          <!-- <img src="../../assets/penclie.png" class="item-icon"> -->
+          <i class="el-icon-edit item-icon"></i>
+          <span class="change-text">修改</span>
+        </div>
+        <div class="item-change flex-row-y-center" v-bind:id="index" v-on:click="actionToOperation" v-else>
+          <div id="0" class="item-btn">保存</div>
+          <div id="1" class="item-btn">取消</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState } from "vuex";
+export default {
+  name: "userChangeInfo",
+  components: {},
+  props: {},
+  data() {
+    return {
+        username: undefined,
+        sex: undefined,
+        favouriteTeam: undefined,
+        infoList: [
+          {
+            title: '用户名',
+            isShow: false,
+            placeholder: '请输入用户名',
+            userInput: ''
+          },
+          {
+            title: '个人介绍',
+            isShow: false,
+            placeholder: '请输入个人介绍',
+            userInput: ''
+          },
+          {
+            title: '性别',
+            isShow: false,
+            placeholder: '',
+          },
+        ]
+    };
+  },
+  watch: {},
+  computed: {
+    ...mapState(["userName"])
+  },
+  methods: {
+    actionToChangeInfo(event) {
+      const currentPage = event.currentTarget.id;
+      this.infoList[currentPage].isShow = true
+    },
+    actionToOperation(event) {
+      switch (currentPage) {
+        case 0:
+          
+          break;
+        case 1:
+
+          break;
+      }
+    },
+    actionToLoadHeadIcon() {
+        console.log('上传图片')
+    }
+  },
+  created() {},
+  mounted() {}
+};
+</script>
+<style scoped>
+.container {
+  background-color: rgb(224, 225, 225);
+} 
+.user-info {
+  width: 50vw;
+  height: 40vw;
+  margin-top: 5vw;
+  background-color: #fff;
+}
+.userinfo-title {
+  font-size: 30px;
+  font-weight: 500;
+  margin-top: 30px;
+  width: 80%;
+  margin-left: 10%;
+  border-bottom-style: 1px solid black;
+}
+.item-title {
+  font-size: 16px;
+  font-weight: 600;
+  width: 50px;
+}
+.information-item {
+  width: 80%;
+  margin-left: 10%;
+  border-bottom: 1px solid #eeeeee;
+  padding: 30px 0px 30px 0px;
+}
+.item-left {
+  width: 90%;
+}
+.item-class {
+  margin-left: 80px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.change-text {
+  font-size: 14px;
+  color: rgb(82, 173, 75);
+}
+.item-icon {
+  font-size: 18px;
+  color: rgb(82, 173, 75);
+}
+.user-icon {
+  width: 100px;
+  height: 100px;
+  margin-left: 80px;
+}
+.upload-detail {
+  margin-left: 10px;
+}
+.file-btn {
+  background-color: rgb(82, 173, 75);
+  color: white;
+  margin-top: 15px;
+  cursor: pointer;
+}
+.user-input {
+  width: 300px;
+  height: 30px;
+  margin-left: 80px;
+  outline: #eeeeee;
+}
+.item-btn {
+  width: 30px;
+  font-size: 15px;
+  color: rgb(82, 173, 75);
+}
+.item-btn:nth-child(2) {
+  margin-left: 10px;
+}
+.item-change {
+  text-align: center;
+}
+</style>

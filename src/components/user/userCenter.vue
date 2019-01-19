@@ -1,31 +1,55 @@
 <template>
-  <div class="app">
+  <div class="app flex-row-x-center">
       <div class="user-center-box flex-column-x-center">
           <div class="user-detail flex-row-y-center">
               <div class="user-png">
-                  <img class="user-icon" src="../../assets/user-icon-test.png"/>
+                  <img class="user-icon" src="../../assets/user_icon_test.png"/>
               </div>
-              <div class="user-info">
+              <div class="user-info flex-row-y-center">
+                <div class="vip">
+                    <img class="vip-icon" src="../../assets/vip.png"/>
+                </div>
                 <span class="user-nickname">{{userName}}</span>
               </div>
-              <button class="action-user-info">点击编辑个人资料</button>
+              <button class="action-user-info" v-on:click="actionToChangeInfo">点击编辑个人资料</button>
           </div>
-          <div class="user-detail flex-row" v-on:click="catchSwitchTab">
-              <div :class='currentIndex == 0 ?"user-tab-activity":"user-tab-normal"' id="0">
-                我的帖子
-              </div>
-              <div :class='currentIndex == 1 ?"user-tab-activity":"user-tab-normal"' id="1">
-                回复我的
-              </div>
-              <div :class='currentIndex == 2 ?"user-tab-activity":"user-tab-normal"' id="2">
-                我的回复
-              </div>
-              <div :class='currentIndex == 3 ?"user-tab-activity":"user-tab-normal"' id="3">
-                我的收藏
-              </div>
-          </div>
+          <transition>
+            <div class="user-detail flex-row" v-on:click="catchSwitchTab">
+                <div :class='currentIndex == 0 ?"user-tab-activity":"user-tab-normal"' id="0">
+                  我的帖子
+                  <div class="bottom-line" v-if="currentIndex == 0"></div>
+                </div>
+                <div :class='currentIndex == 1 ?"user-tab-activity":"user-tab-normal"' id="1">
+                  回复我的
+                  <div class="bottom-line" v-if="currentIndex == 1"></div>
+                </div>
+                <div :class='currentIndex == 2 ?"user-tab-activity":"user-tab-normal"' id="2">
+                  我的回复
+                  <div class="bottom-line" v-if="currentIndex == 2"></div>
+                </div>
+                <div :class='currentIndex == 3 ?"user-tab-activity":"user-tab-normal"' id="3">
+                  我的收藏
+                  <div class="bottom-line" v-if="currentIndex == 3"></div>
+                </div>
+            </div>
+          </transition>
           <div class="history-detail">
           </div>
+      </div>
+       <div class="favourite-team flex-column-x-center">
+         <div class="team-item">
+           <img  class="team-icon" src="../../assets/team_icon.png"/>
+         </div>
+         <div class="user-tab flex-row">
+           <span class="tab-item">
+             <div class="tab-title">我的关注</div>
+             <div class="tab-num">100</div>
+           </span>
+           <span class="tab-item">
+             <div class="tab-title">我的粉丝</div>
+             <div class="tab-num">2000</div>
+           </span>
+         </div>
       </div>
   </div>
 </template>
@@ -50,6 +74,9 @@ export default {
   methods: {
     catchSwitchTab (ev) {
       this.currentIndex = ev.target.id
+    },
+    actionToChangeInfo () {
+      this.$router.push('/userChangeInfo')
     }
   },
   created () {},
@@ -57,10 +84,21 @@ export default {
 }
 </script>
 <style scoped>
+.user-center-box {
+  background-color: rgb(224, 225, 225);
+  width: 50vw;
+  margin-top: 40px;
+}
 .user-detail {
     width: 50vw;
-    margin-top: 20px;
+    background-color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    padding-bottom: 10px;
     position: relative;
+}
+.user-png {
+  margin-left: 30px;
 }
 .user-icon {
     width: 120px;
@@ -90,13 +128,65 @@ export default {
     line-height: 40px;
     color:black;
     text-align: center;
+    cursor: pointer;
 }
 .user-tab-activity {
     width: 10vw;
     height: 40px;
     line-height: 40px;
     color:rgb(82, 173, 75);
-    border-bottom: 1px solid rgb(82, 173, 75);
     text-align: center;
+    cursor: pointer;
+}
+.bottom-line {
+  width: 2vw;
+  height: 2px;
+  /* position: absolute; */
+  /* bottom: 5px; */
+  margin-left: 4vw;
+  background-color: rgb(82, 173, 75);
+}
+.history-detail {
+  width: 50vw;
+  height: 300px;
+  margin-top: 20px;
+  background-color: #ffffff;
+}
+.favourite-team {
+  width: 20vw;
+  height: 400px;
+  margin-top: 40px;
+  margin-left: 20px;
+  background-color: #fff;
+}
+.team-icon {
+  width: 100px;
+  height: 100px;
+}
+.team-item {
+  margin-top: 10px;
+}
+.tab-item {
+  width: 10vw;
+  text-align: center;
+  margin-top: 15px;
+  border-bottom: 3px solid rgb(82, 173, 75);
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+.tab-title {
+  font-size: 16px;
+  font-weight: 400;
+  color: rgb(82, 173, 75);
+}
+.tab-num {
+  font-size: 20px;
+  font-weight: 500;
+  color: rgb(82, 173, 75);
+}
+.vip-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
 }
 </style>
