@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-12 18:40:54
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-24 14:14:12
+ * @LastEditTime: 2019-01-24 15:37:41
  * @Description: file content
  -->
 <template>
@@ -144,7 +144,34 @@ export default {
       })
     },
     // 注册模块
-    actionToRegister () {},
+    actionToRegister () {
+       if (this.registerData.userName === '' || this.registerData.userName === undefined) {
+        this.clearAllInput()
+        this.$notify.error({
+          title: '',
+          message: '用户名输入有误，请重新输入'
+        })
+      } else if (this.registerData.password === '' || this.registerData.password === undefined) {
+        this.clearAllInput()
+        this.$notify.error({
+          title: '',
+          message: '密码输入有误，请重新输入'
+        })
+      } else if(this.registerData.telephone === '' || this.registerData.telephone === undefined) {
+        this.clearAllInput()
+        this.$notify.error({
+          title: '',
+          message: '手机号输入有误，请重新输入'
+        })
+      }
+      this.$http.post('/api/register',{
+        username: this.registerData.userName,
+        password: this.registerData.password,
+        telephone: this.registerData.telephone,
+      }).then((err,res)=> {
+        
+      })
+    },
     actionSwitchTab () {
       this.loginData = {
         userName: '',
