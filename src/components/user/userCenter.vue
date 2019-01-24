@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import {mapState, mapActions, mapGetters} from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'userCenter',
   components: {},

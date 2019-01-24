@@ -87,14 +87,14 @@ export default {
       this.infoList[currentPage].isShow = true
     },
     actionToOperation (event) {
-      switch (currentPage) {
-        case 0:
+      // switch (currentPage) {
+      //   case 0:
 
-          break
-        case 1:
+      //     break
+      //   case 1:
 
-          break
-      }
+      //     break
+      // }
     },
     actionToLoadHeadIcon () {
       console.log('上传图片')

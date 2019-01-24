@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-19 17:23:04
+ * @LastEditTime: 2019-01-24 12:03:25
  * @Description: file content
  -->
 <template>
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
   name: 'TopBar',
   components: {},
@@ -77,7 +77,6 @@ export default {
     ...mapMutations(['CHANGE_LOGIN_DIALOG_STATE']),
     ...mapActions(['changeDialogState', 'logout']),
     toast () {
-      const that = this
       this.$notify({
         title: '成功',
         message: '账号退出成功',

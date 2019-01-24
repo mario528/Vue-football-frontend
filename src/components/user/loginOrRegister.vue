@@ -1,3 +1,10 @@
+<!--
+ * @Author: majiaao
+ * @Date: 2019-01-12 18:40:54
+ * @LastEditors: majiaao
+ * @LastEditTime: 2019-01-24 14:14:12
+ * @Description: file content
+ -->
 <template>
   <div v-if="getLoginState">
     <div class="container popup-menu flex-row-center">
@@ -30,7 +37,8 @@
           <button class="card-btn theme-background-color" v-on:click="actionToLogin">登陆</button>
         </div>
         <div class="card-bottom flex-row-space-between">
-          <div>没有账号？
+          <div>
+            没有账号？
             <span class="bottom-text" v-on:click="changeDialogState">注册</span>
           </div>
           <span class="bottom-text">忘记密码</span>
@@ -63,19 +71,19 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapState } from "vuex";
+import { mapGetters, mapActions, mapState } from 'vuex'
 
-import animalIconCommon from "../../assets/common_login_icon.png";
-import animalIconActive from "../../assets/common_login_active.png";
-import animalIconPassword from "../../assets/common_login_password.png";
+import animalIconCommon from '../../assets/common_login_icon.png'
+import animalIconActive from '../../assets/common_login_active.png'
+import animalIconPassword from '../../assets/common_login_password.png'
 
-import URL from "@/api/url.js";
-import axios from "@/api/axios.js";
+import URL from '@/api/url.js'
+import axios from '@/api/index.js'
 export default {
-  name: "LoginOrRegister",
+  name: 'LoginOrRegister',
   components: {},
   props: [],
-  data() {
+  data () {
     return {
       state: 0, // 0: 登录 1: 注册
       dialogShow: false,
@@ -89,53 +97,70 @@ export default {
         password: undefined,
         telephone: undefined
       }
-    };
+    }
   },
   watch: {},
   computed: {
-    ...mapState(["userDialogNum"]),
-    ...mapGetters(["getLoginState"])
+    ...mapState(['userDialogNum']),
+    ...mapGetters(['getLoginState'])
   },
   methods: {
-    ...mapActions(["changeDialogState"]),
-    userNameFocus() {
-      this.iconShow = animalIconActive;
+    ...mapActions(['changeDialogState']),
+    clearAllInput () {
+      const ObjArray = [this.loginData, this.registerData]
+      ObjArray.forEach(element => {
+        Object.keys(element).forEach((item) => {
+          element[item] = ''
+        })
+      })
     },
-    userBlur() {
-      this.iconShow = animalIconCommon;
+    userNameFocus () {
+      this.iconShow = animalIconActive
     },
-    passwordFocus() {
-      this.iconShow = animalIconPassword;
+    userBlur () {
+      this.iconShow = animalIconCommon
     },
-    actionToLogin() {
-      if (
-        this.loginData.userName == "" ||
-        this.loginData.userName == undefined
-      ) {
-      } else if (
-        this.loginData.password == "" ||
-        this.loginData.password == undefined
-      ) {
+    passwordFocus () {
+      this.iconShow = animalIconPassword
+    },
+    actionToLogin () {
+      if (this.loginData.userName === '' || this.loginData.userName === undefined) {
+        this.clearAllInput()
+        this.$notify.error({
+          title: '',
+          message: '用户名输入有误，请重新输入'
+        })
+      } else if (this.loginData.password === '' || this.loginData.password === undefined) {
+        this.clearAllInput()
+        this.$notify.error({
+          title: '',
+          message: '密码输入有误，请重新输入'
+        })
       }
+      this.$http.post('/api/login', {
+        username: this.loginData.userName,
+        password: this.loginData.password
+      }).then((err, res) => {
+      })
     },
     // 注册模块
-    actionToRegister() {},
-    actionSwitchTab() {
+    actionToRegister () {},
+    actionSwitchTab () {
       this.loginData = {
-        userName: "",
-        password: ""
-      };
+        userName: '',
+        password: ''
+      }
       this.registerData = {
-        userName: "",
-        password: "",
-        telephone: ""
-      };
-      this.state === 1 ? (this.state = 0) : (this.state = 1);
+        userName: '',
+        password: '',
+        telephone: ''
+      }
+      this.state === 1 ? (this.state = 0) : (this.state = 1)
     }
   },
-  created() {},
-  mounted() {}
-};
+  created () {},
+  mounted () {}
+}
 </script>
 <style scoped>
 * {

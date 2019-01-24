@@ -1,3 +1,10 @@
+<!--
+ * @Author: majiaao
+ * @Date: 2019-01-19 17:01:56
+ * @LastEditors: majiaao
+ * @LastEditTime: 2019-01-24 11:11:39
+ * @Description: file content
+ -->
 <template>
   <div class="app flex-row-x-center">
     <div class="homepage-banner flex-row">
@@ -42,14 +49,14 @@
 </template>
 
 <script>
-import swiper0 from "../../assets/swiper0.png";
-import swiper1 from "../../assets/swiper1.jpg";
-import swiper2 from "../../assets/swiper2.jpg";
+import swiper0 from '../../assets/swiper0.png'
+import swiper1 from '../../assets/swiper1.jpg'
+import swiper2 from '../../assets/swiper2.jpg'
 export default {
-  name: "Home",
+  name: 'Home',
   components: {},
   props: {},
-  data() {
+  data () {
     return {
       swiperOption: {
         autoplay: 500,
@@ -58,66 +65,66 @@ export default {
         autoplay: true,
         grabCursor: true,
         pagination: {
-          el: ".swiper-pagination",
+          el: '.swiper-pagination',
           clickable: true
         },
         navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev"
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
         }
       },
       swiperList: [
         {
-          title: "多家媒体：C罗接受西班牙检方处罚，上缴1880万欧罚款",
+          title: '多家媒体：C罗接受西班牙检方处罚，上缴1880万欧罚款',
           url: swiper0
         },
         {
-          title: "虽然我的弟弟是大佬，但哥只想上场踢球",
+          title: '虽然我的弟弟是大佬，但哥只想上场踢球',
           url: swiper1
         },
         {
-          title: "“王子”降临诺坎普，你还记得他和他的暴力美学吗？",
+          title: '“王子”降临诺坎普，你还记得他和他的暴力美学吗？',
           url: swiper2
         }
       ],
       matchList: [
         {
-          property: "友谊赛",
+          property: '友谊赛',
           isBegin: false,
           itemHome: {
-            icon: "http://img.dongqiudi.com/data/pic/429.png",
-            name: "北京国安",
+            icon: 'http://img.dongqiudi.com/data/pic/429.png',
+            name: '北京国安',
             score: 4
           },
           itemAway: {
-            icon: "http://img.dongqiudi.com/data/pic/6557.png",
-            name: "贵州人和",
+            icon: 'http://img.dongqiudi.com/data/pic/6557.png',
+            name: '贵州人和',
             score: 1
           }
         },
         {
-          property: "友谊赛",
+          property: '友谊赛',
           isBegin: false,
           itemHome: {
-            icon: "http://img.dongqiudi.com/data/pic/429.png",
-            name: "北京国安",
+            icon: 'http://img.dongqiudi.com/data/pic/429.png',
+            name: '北京国安',
             score: 5
           },
           itemAway: {
-            icon: "http://img.dongqiudi.com/data/pic/6557.png",
-            name: "贵州人和",
+            icon: 'http://img.dongqiudi.com/data/pic/6557.png',
+            name: '贵州人和',
             score: 2
           }
         }
       ]
-    };
+    }
   },
   watch: {},
   computed: {},
   methods: {},
-  created() {},
-  mounted() {}
-};
+  created () {},
+  mounted () {}
+}
 </script>
 <style>
 .homepage-banner {
