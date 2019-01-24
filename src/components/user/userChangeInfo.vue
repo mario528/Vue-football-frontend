@@ -46,68 +46,68 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
-  name: "userChangeInfo",
+  name: 'userChangeInfo',
   components: {},
   props: {},
-  data() {
+  data () {
     return {
-        username: undefined,
-        sex: undefined,
-        favouriteTeam: undefined,
-        infoList: [
-          {
-            title: '用户名',
-            isShow: false,
-            placeholder: '请输入用户名',
-            userInput: ''
-          },
-          {
-            title: '个人介绍',
-            isShow: false,
-            placeholder: '请输入个人介绍',
-            userInput: ''
-          },
-          {
-            title: '性别',
-            isShow: false,
-            placeholder: '',
-          },
-        ]
-    };
+      username: undefined,
+      sex: undefined,
+      favouriteTeam: undefined,
+      infoList: [
+        {
+          title: '用户名',
+          isShow: false,
+          placeholder: '请输入用户名',
+          userInput: ''
+        },
+        {
+          title: '个人介绍',
+          isShow: false,
+          placeholder: '请输入个人介绍',
+          userInput: ''
+        },
+        {
+          title: '性别',
+          isShow: false,
+          placeholder: ''
+        }
+      ]
+    }
   },
   watch: {},
   computed: {
-    ...mapState(["userName"])
+    ...mapState(['userName'])
   },
   methods: {
-    actionToChangeInfo(event) {
-      const currentPage = event.currentTarget.id;
+    actionToChangeInfo (event) {
+      const currentPage = event.currentTarget.id
       this.infoList[currentPage].isShow = true
     },
-    actionToOperation(event) {
+    actionToOperation (event) {
       switch (currentPage) {
         case 0:
-          
-          break;
+
+          break
         case 1:
 
-          break;
+          break
       }
     },
-    actionToLoadHeadIcon() {
-        console.log('上传图片')
+    actionToLoadHeadIcon () {
+      console.log('上传图片')
     }
   },
-  created() {},
-  mounted() {}
-};
+  created () {},
+  mounted () {}
+}
 </script>
 <style scoped>
 .container {
   background-color: rgb(224, 225, 225);
-} 
+}
 .user-info {
   width: 50vw;
   height: 40vw;
@@ -120,12 +120,13 @@ export default {
   margin-top: 30px;
   width: 80%;
   margin-left: 10%;
-  border-bottom-style: 1px solid black;
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 20px;
 }
 .item-title {
   font-size: 16px;
   font-weight: 600;
-  width: 50px;
+  width: 70px;
 }
 .information-item {
   width: 80%;

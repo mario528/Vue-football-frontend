@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-19 14:21:19
+ * @LastEditTime: 2019-01-19 17:23:04
  * @Description: file content
  -->
 <template>
@@ -57,69 +57,69 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
 export default {
-  name: "TopBar",
+  name: 'TopBar',
   components: {},
   props: {},
-  data() {
+  data () {
     return {
       currentIndex: 0,
       userSettingShow: false,
       userSearch: undefined
-    };
+    }
   },
   watch: {},
   computed: {
-    ...mapState(["isLogin"])
+    ...mapState(['isLogin'])
   },
   methods: {
-    ...mapMutations(["CHANGE_LOGIN_DIALOG_STATE"]),
-    ...mapActions(["changeDialogState", "logout"]),
-    toast() {
-      const that = this;
+    ...mapMutations(['CHANGE_LOGIN_DIALOG_STATE']),
+    ...mapActions(['changeDialogState', 'logout']),
+    toast () {
+      const that = this
       this.$notify({
-          title: '成功',
-          message: '账号推出成功',
-          type: 'success'
-      });
-      this.logout();
+        title: '成功',
+        message: '账号退出成功',
+        type: 'success'
+      })
+      this.logout()
       this.$router.push('/home')
     },
-    catchSwitchTab(ev) {
-      this.currentIndex = ev.target.id;
+    catchSwitchTab (ev) {
+      this.currentIndex = ev.target.id
     },
-    changeDialogStateBox(ev) {
-      const currentIndex = ev.target.id;
-      this.$store.commit("CHANGE_LOGIN_DIALOG_STATE", {
+    changeDialogStateBox (ev) {
+      const currentIndex = ev.target.id
+      this.$store.commit('CHANGE_LOGIN_DIALOG_STATE', {
         currentIndex: currentIndex
-      });
+      })
     },
-    actionUserSetting() {
-      this.userSettingShow = !this.userSettingShow;
+    actionUserSetting () {
+      this.userSettingShow = !this.userSettingShow
     },
-    actionLogout() {},
-    actionToLogin() {},
-    handleCommand(command) {
+    actionLogout () {},
+    actionToLogin () {},
+    handleCommand (command) {
       switch (command) {
-        case "usercenter":
-          this.$router.push("/userCenter");
-          break;
-        case "changeInfo":
-          this.$router.push("/userChangeInfo");
-          break;
-        case "logout":
-          this.toast();
-          break;
-        case "homePage":
-          this.$router.push("/home");
-          break;
+        case 'usercenter':
+          this.$router.push('/userCenter')
+          break
+        case 'changeInfo':
+          this.$router.push('/userChangeInfo')
+          break
+        case 'logout':
+          this.toast()
+          break
+        case 'homePage':
+          this.$router.push('/home')
+          break
       }
     }
   },
-  created() {},
-  mounted() {}
-};
+  created () {},
+  mounted () {}
+}
 </script>
 <style scoped>
 .app {

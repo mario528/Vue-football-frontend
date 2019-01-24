@@ -6,10 +6,10 @@
                   <img class="user-icon" src="../../assets/user_icon_test.png"/>
               </div>
               <div class="user-info flex-row-y-center">
-                <div class="vip">
+                <div class="vip flex-row-y-center">
                     <img class="vip-icon" src="../../assets/vip.png"/>
                 </div>
-                <span class="user-nickname">{{userName}}</span>
+                <span class="user-nickname flex-row-y-center">{{userName}}</span>
               </div>
               <button class="action-user-info" v-on:click="actionToChangeInfo">点击编辑个人资料</button>
           </div>
@@ -42,7 +42,7 @@
          </div>
          <div class="user-tab flex-row">
            <span class="tab-item">
-             <div class="tab-title">我的关注</div>
+             <div class="tab-title">关注的人</div>
              <div class="tab-num">100</div>
            </span>
            <span class="tab-item">
