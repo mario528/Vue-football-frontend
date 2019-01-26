@@ -12,11 +12,18 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-          target: 'http://localhost:3000',
-          changeOrigin: true,
-          pathRewrite: {
-            '^/api': ''
-          }
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      },
+      '/v1': {
+        target: 'https://api.dongqiudi.com/data/v1',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/v1': ''
+        }
       }
     },
 

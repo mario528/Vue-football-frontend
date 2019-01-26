@@ -3,7 +3,7 @@
       <div class="user-center-box flex-column-x-center">
           <div class="user-detail flex-row-y-center">
               <div class="user-png">
-                  <img class="user-icon" src="../../assets/user_icon_test.png"/>
+                  <img class="user-icon" :src="userIconUrl"/>
               </div>
               <div class="user-info flex-row-y-center">
                 <div class="vip flex-row-y-center">
@@ -68,7 +68,7 @@ export default {
   watch: {},
   computed: {
     ...mapState([
-      'userName'
+      'userName','userIconUrl'
     ])
   },
   methods: {

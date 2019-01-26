@@ -2,15 +2,15 @@
  * @Author: majiaao
  * @Date: 2019-01-19 17:01:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-24 11:11:39
+ * @LastEditTime: 2019-01-26 15:38:50
  * @Description: file content
  -->
 <template>
-  <div class="app flex-row-x-center">
+  <div class="app">
     <div class="homepage-banner flex-row">
       <div class="scrollview">
         <swiper :options="swiperOption" class="homepage-swiper">
-          <swiper-slide v-for="(item,index) in swiperList" v-bind:key="index">
+          <swiper-slide v-for="(item,index) in bannerList" v-bind:key="index">
             <img class="swiper-item-img" v-bind:src="item.url">
             <div class="swiper-item-title">{{item.title}}</div>
           </swiper-slide>
@@ -45,6 +45,35 @@
         </div>
       </div>
     </div>
+    <div class="homepage-content flex-row">
+      <div class="homepage-news"></div>
+      <div class="homepage-rank" v-on:click="actionTochangeType">
+        <ul class="rank-swiper">
+          <li class="rank-swiper-item" id="china">中超</li>
+          <li class="rank-swiper-item" id="english">英超</li>
+          <li class="rank-swiper-item" id="spain">西甲</li>
+          <li class="rank-swiper-item" id="dermany">德甲</li>
+          <li class="rank-swiper-item" id="italy">意甲</li>
+          <li class="rank-swiper-item" id="french">法甲</li>
+        </ul>
+        <div class="rank-header flex-row-y-center">
+          <div class="header-item" v-for="(item,index) in headerList" v-bind:key="index">
+            {{item}}
+          </div>
+        </div>
+        <div class="rank-content flex-column" v-for="(item,index) in rankContent" v-bind:key="index">
+            <div class="rank-content-row flex-row-y-center">
+              <div class="rank-team">{{item.team_name}}</div>
+              <div class="rank-team">{{item.matches_total}}</div>
+              <div class="rank-team">{{item.matches_won}}</div>
+              <div class="rank-team">{{item.matches_draw}}</div>
+              <div class="rank-team">{{item.matches_lost}}</div>
+              <div class="rank-team">{{item.goals_pro}}/{{item.goals_against}}</div>
+              <div class="rank-team">{{item.goals_pro}}</div>
+            </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -52,6 +81,8 @@
 import swiper0 from '../../assets/swiper0.png'
 import swiper1 from '../../assets/swiper1.jpg'
 import swiper2 from '../../assets/swiper2.jpg'
+
+import rankType from '../../utils/rankType'
 export default {
   name: 'Home',
   components: {},
@@ -73,20 +104,9 @@ export default {
           prevEl: '.swiper-button-prev'
         }
       },
-      swiperList: [
-        {
-          title: '多家媒体：C罗接受西班牙检方处罚，上缴1880万欧罚款',
-          url: swiper0
-        },
-        {
-          title: '虽然我的弟弟是大佬，但哥只想上场踢球',
-          url: swiper1
-        },
-        {
-          title: '“王子”降临诺坎普，你还记得他和他的暴力美学吗？',
-          url: swiper2
-        }
-      ],
+      bannerList: [],
+      headerList: [],
+      leagueType: 'china',
       matchList: [
         {
           property: '友谊赛',
@@ -121,8 +141,44 @@ export default {
   },
   watch: {},
   computed: {},
-  methods: {},
-  created () {},
+  methods: {
+    getRank(type,callback) {
+      if(typeof type != 'string') {
+        throw new Error('请输入正确的联赛');
+      }
+      this.$http.get('/v1/team_ranking/0?', {
+      params: {
+        season_id: this.getLeagueNum(type),
+        version: 0,
+        refer: 'data_tab',
+        type:'total_ranking',
+        from: 'msite_com'
+      }
+    }).then((result)=> {
+      callback(result)
+    })
+    },
+    getLeagueNum(leagueStr) {
+      return rankType[leagueStr];
+    },
+    actionTochangeType(event) {
+      console.log(event.target.id)
+      const chooseType = event.target.id;
+      this.getRank(chooseType,(res)=> {
+        this.headerList = res.data.content.rounds[0].content.header;
+        this.rankContent = res.data.content.rounds[0].content.data;
+    })
+    }
+  },
+  created () {
+    this.getRank('china',(res)=> {
+      this.headerList = res.data.content.rounds[0].content.header;
+      this.rankContent = res.data.content.rounds[0].content.data;
+    })
+    this.$http.get('/api/home').then((result)=> {
+      this.bannerList = result.data.banner
+    })
+  },
   mounted () {}
 }
 </script>
@@ -132,6 +188,13 @@ export default {
   width: 75vw;
   height: 20vw;
   margin-top: 40px;
+  margin-left: calc((100vw - 75vw)/2);
+}
+.homepage-content {
+  width: 75vw;
+  height: 50vw;
+  margin-left: calc((100vw - 75vw)/2);
+  margin-top: 20px;
 }
 .scrollview {
   position: relative;
@@ -199,5 +262,53 @@ export default {
   font-size: 20px;
   color: white;
   font-weight: 400;
+}
+.rank-header {
+  width: 35vw;
+}
+.header-item {
+  width: 5vw;
+  text-align: center;
+}
+.rank-content {
+  text-align: center;
+  width: 5vw;
+}
+.rank-content-row {
+  width: 35vw;
+  background-color: rgb(50, 50, 50);
+}
+.rank-team {
+  text-align: center;
+  width: 5vw;
+  padding: 5px 0px 5px 0px;
+  font-size: 12px;
+  color: white;
+  border-bottom: 1px solid rgb(37, 37, 37);
+}
+.rank-swiper {
+  width: 32vw;
+  background-color: rgb(82, 173, 75);
+  overflow: scroll;
+}
+.rank-swiper-item {
+  width: 8vw;
+  font-size: 16px;
+  border: 1px solid #eeeeee;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+}
+.header-item {
+  background-color: rgb(82, 173, 75);
+  padding: 5px 0px 5px 0px;
+  color: white;
+}
+.rank-swiper-item {
+  display: inline-block;
+}
+.homepage-news {
+  width: 50vw;
+  height: 400px;
 }
 </style>

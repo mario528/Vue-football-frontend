@@ -20,12 +20,29 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 Vue.use(VueAwesomeSwiper)
+
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.needLogin)) { // 判断该路由是否需要登录权限
+    if (store.state.isLogin) { // 判断当前用户的登录信息是否存在
+      next()
+    } else {
+      next({
+        path: '/'
+      })
+    }
+  } else {
+    next()
+  }
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
   axios,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })

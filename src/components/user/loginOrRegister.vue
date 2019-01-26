@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-12 18:40:54
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-24 15:37:41
+ * @LastEditTime: 2019-01-26 01:21:43
  * @Description: file content
  -->
 <template>
@@ -71,14 +71,14 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapState } from 'vuex'
+import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 
 import animalIconCommon from '../../assets/common_login_icon.png'
 import animalIconActive from '../../assets/common_login_active.png'
 import animalIconPassword from '../../assets/common_login_password.png'
 
-import URL from '@/api/url.js'
-import axios from '@/api/index.js'
+import URL from '@/utils/url.js'
+import axios from '@/utils/index.js'
 export default {
   name: 'LoginOrRegister',
   components: {},
@@ -105,7 +105,7 @@ export default {
     ...mapGetters(['getLoginState'])
   },
   methods: {
-    ...mapActions(['changeDialogState']),
+    ...mapActions(['changeDialogState','login','setUsername','setUserIconUrl']),
     clearAllInput () {
       const ObjArray = [this.loginData, this.registerData]
       ObjArray.forEach(element => {
@@ -124,6 +124,7 @@ export default {
       this.iconShow = animalIconPassword
     },
     actionToLogin () {
+      const that = this;
       if (this.loginData.userName === '' || this.loginData.userName === undefined) {
         this.clearAllInput()
         this.$notify.error({
@@ -140,11 +141,27 @@ export default {
       this.$http.post('/api/login', {
         username: this.loginData.userName,
         password: this.loginData.password
-      }).then((err, res) => {
+      }).then((res) => {
+        if(res.data.data[0].state == 1) {
+          that.$message({
+              message: '登陆成功',
+              type: 'success'
+          });
+          this.setUserIconUrl(res.data.data[0].userIcon)
+          this.setUsername(this.loginData.userName)
+          this.changeDialogState();
+          this.login();
+          this.clearAllInput();
+        } else if(res.data.data[0].state == -1) {
+          this.$message.error('密码错误');
+        } else if(res.data.data[0].state == 2) {
+           this.$message.error('输入的用户名不存在');
+        }
       })
     },
     // 注册模块
     actionToRegister () {
+       const that = this;
        if (this.registerData.userName === '' || this.registerData.userName === undefined) {
         this.clearAllInput()
         this.$notify.error({
@@ -168,8 +185,13 @@ export default {
         username: this.registerData.userName,
         password: this.registerData.password,
         telephone: this.registerData.telephone,
-      }).then((err,res)=> {
-        
+      }).then((res)=> {
+        if(res.data[0].state == 1) {
+          that.$message({
+              message: '恭喜您,注册成功',
+              type: 'success'
+          });
+        }
       })
     },
     actionSwitchTab () {

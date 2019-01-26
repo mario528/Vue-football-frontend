@@ -2,13 +2,15 @@
  * @Author: majiaao
  * @Date: 2019-01-12 15:51:34
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-18 16:38:29
+ * @LastEditTime: 2019-01-26 01:13:38
  * @Description: file content
  */
 import {
   CHANGE_LOGIN_DIALOG_STATE,
   LOGOUT,
-  LOGIN
+  LOGIN,
+  SETUSERNAME,
+  SETUSERICONURL
 } from './mutations_types'
 export default {
   [CHANGE_LOGIN_DIALOG_STATE] (state, stark) {
@@ -22,5 +24,11 @@ export default {
   },
   [LOGIN] (state) {
     state.isLogin = true
+  },
+  [SETUSERNAME] (state, stark) {
+    state.userName = stark
+  },
+  [SETUSERICONURL] (state, stark) {
+    state.userIconUrl = stark
   }
 }

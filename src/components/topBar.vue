@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-24 12:03:25
+ * @LastEditTime: 2019-01-26 01:19:29
  * @Description: file content
  -->
 <template>
@@ -40,16 +40,19 @@
       </div>
       <el-dropdown v-else @command="handleCommand">
         <div class="user-login flex-row-y-center" v-on:hover="actionUserSetting">
-          <img class="user-topbar-icon" src="../assets/user_icon_test.png">
+          <img class="user-topbar-icon" :src="userIconUrl">
           <img
             class="state-arrow"
             v-bind:src="userSettingShow == false?require('../assets/pull_down.png'):require('../assets/pack_up.png')"
           >
         </div>
         <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="usercenter" class="drop-item">{{userName}}</el-dropdown-item>
           <el-dropdown-item command="usercenter" class="drop-item">用户中心</el-dropdown-item>
           <el-dropdown-item command="changeInfo" class="drop-item">修改信息</el-dropdown-item>
-          <el-dropdown-item command="logout" class="drop-item">退出登陆</el-dropdown-item>
+          <el-dropdown-item command="logout" class="drop-item">
+            退出登陆<i class="el-icon-caret-right"></i>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -71,7 +74,7 @@ export default {
   },
   watch: {},
   computed: {
-    ...mapState(['isLogin'])
+    ...mapState(['isLogin','userName','userIconUrl'])
   },
   methods: {
     ...mapMutations(['CHANGE_LOGIN_DIALOG_STATE']),

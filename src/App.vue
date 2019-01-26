@@ -21,9 +21,7 @@ export default {
 
 <style>
 .app {
-  overflow: hidden;
   width: 100vw;
-  height: 100vh;
   background-color: rgb(224, 225, 225);
   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }

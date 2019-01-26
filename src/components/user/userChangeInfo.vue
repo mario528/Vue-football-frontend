@@ -5,20 +5,21 @@
       <div class="information-item">
         <div class="flex-row-y-center">
           <div class="item-title">头像</div>
-          <img class="user-icon" src="../../assets/user_icon_test.png">
+          <img class="user-icon" :src="userIconUrl">
           <div class="upload-detail">
             <span class="upload-tips">支持jpg,png格式大小5M以内的图片</span>
-            <el-upload
+           <el-upload
               class="upload-demo"
-              action=""
-              ref="upload"
+              action="/api/loadUserIcon"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
-              :file-list="fileList"
-              :auto-upload="false"
-            >
+              :before-upload="beforeUpload"
+              :before-remove="beforeRemove"
+              multiple
+              :limit="3"
+              :on-exceed="handleExceed"
+              :file-list="fileList">
               <el-button slot="trigger" size="small" type="primary" class="file-btn">选取文件</el-button>
-              <el-button style="margin-left: 10px;" size="small" type="success" @click="actionToLoadHeadIcon" class="file-btn">上传到服务器</el-button>
             </el-upload>
           </div>
         </div>
@@ -79,22 +80,34 @@ export default {
   },
   watch: {},
   computed: {
-    ...mapState(['userName'])
+    ...mapState(['userName','userIconUrl'])
   },
   methods: {
+    beforeUpload(file) {
+      console.log("文件名："+ file.name)
+      this.files = file;
+      const fileType1 = file.name.split('.')[1] == 'jpg'? true: false;
+      const fileType2 = file.name.split('.')[1] == 'png'? true: false;
+      if(fileType1 === false && fileType2  === false) {
+        this.$notify.error({
+          title: '错误',
+          message: '只支持上传以jpg,png结尾的图片类型'
+        });
+        return false;
+      }
+      if(file.size/1024/1024>5) {
+        this.$notify.error({
+          title: '错误',
+          message: '只支持上传小于5M大小的图片'
+        });
+        return false;
+      }
+    },
     actionToChangeInfo (event) {
       const currentPage = event.currentTarget.id
       this.infoList[currentPage].isShow = true
     },
     actionToOperation (event) {
-      // switch (currentPage) {
-      //   case 0:
-
-      //     break
-      //   case 1:
-
-      //     break
-      // }
     },
     actionToLoadHeadIcon () {
       console.log('上传图片')

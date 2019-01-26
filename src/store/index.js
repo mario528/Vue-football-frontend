@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 19:31:48
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-19 12:49:15
+ * @LastEditTime: 2019-01-26 01:12:29
  * @Description: file content
  */
 import Vue from 'vue'
@@ -14,9 +14,10 @@ import mutations from './mutations'
 Vue.use(Vuex)
 const state = {
   userDialogState: false, // 登陆弹窗
-  isLogin: true, // 是否登陆
-  userName: '马里奥', // 用户名
+  isLogin: false, // 是否登陆
+  userName: '', // 用户名
   sex: '', // 性别
+  userIconUrl: '', // 用户头像
   favouriteTeam: '', // 喜欢的球队
   userDialogNum: 0, // 0: 登陆 1:注册
   isVip: true // 是否是VIP用户
