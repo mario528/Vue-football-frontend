@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-19 17:01:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-26 15:38:50
+ * @LastEditTime: 2019-01-27 11:09:07
  * @Description: file content
  -->
 <template>
@@ -105,6 +105,7 @@ export default {
         }
       },
       bannerList: [],
+      rankContent: [],
       headerList: [],
       leagueType: 'china',
       matchList: [

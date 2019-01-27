@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-12 18:40:54
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-26 01:21:43
+ * @LastEditTime: 2019-01-26 18:02:38
  * @Description: file content
  -->
 <template>
@@ -192,6 +192,11 @@ export default {
               type: 'success'
           });
         }
+        this.setUserIconUrl(res.data[0].data.userIcon)
+        this.setUsername(this.registerData.userName)
+        this.changeDialogState();
+        this.login();
+        this.clearAllInput();
       })
     },
     actionSwitchTab () {

@@ -11,14 +11,13 @@
            <el-upload
               class="upload-demo"
               action="/api/loadUserIcon"
-              :on-preview="handlePreview"
+              :data="uploadData"
               :on-remove="handleRemove"
               :before-upload="beforeUpload"
               :before-remove="beforeRemove"
-              multiple
-              :limit="3"
-              :on-exceed="handleExceed"
-              :file-list="fileList">
+              :onSuccess="uploadSuccess"
+              :limit="1"
+              :on-exceed="handleExceed">
               <el-button slot="trigger" size="small" type="primary" class="file-btn">选取文件</el-button>
             </el-upload>
           </div>
@@ -47,7 +46,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 export default {
   name: 'userChangeInfo',
   components: {},
@@ -57,6 +56,7 @@ export default {
       username: undefined,
       sex: undefined,
       favouriteTeam: undefined,
+      uploadData: {},
       infoList: [
         {
           title: '用户名',
@@ -80,15 +80,19 @@ export default {
   },
   watch: {},
   computed: {
-    ...mapState(['userName','userIconUrl'])
+    ...mapState(['userName','userIconUrl']),
+    ...mapGetters(['getUsername']),
   },
   methods: {
+    ...mapActions(['setUserIconUrl']),
     beforeUpload(file) {
+      this.uploadData.userName = this.userName;
       console.log("文件名："+ file.name)
       this.files = file;
       const fileType1 = file.name.split('.')[1] == 'jpg'? true: false;
       const fileType2 = file.name.split('.')[1] == 'png'? true: false;
-      if(fileType1 === false && fileType2  === false) {
+      const fileType3 = file.name.split('.')[1] == 'jpeg'? true: false;
+      if(fileType1 === false && fileType2  === false && fileType3  === false) {
         this.$notify.error({
           title: '错误',
           message: '只支持上传以jpg,png结尾的图片类型'
@@ -111,6 +115,12 @@ export default {
     },
     actionToLoadHeadIcon () {
       console.log('上传图片')
+    },
+    // 成功上传后的回调函数
+    uploadSuccess (res) {
+      if(res.data.state == 1) {
+        this.setUserIconUrl('data:image/png;base64,'+res.data.userIcon)
+      }
     }
   },
   created () {},
