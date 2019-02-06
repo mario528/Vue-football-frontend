@@ -68,7 +68,7 @@ export default {
   watch: {},
   computed: {
     ...mapState([
-      'userName','userIconUrl'
+      'userName', 'userIconUrl'
     ])
   },
   methods: {

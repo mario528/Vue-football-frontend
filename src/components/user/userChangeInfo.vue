@@ -7,7 +7,7 @@
           <div class="item-title">头像</div>
           <img class="user-icon" :src="userIconUrl">
           <div class="upload-detail">
-            <span class="upload-tips">支持jpg,png格式大小5M以内的图片</span>
+            <span class="upload-tips">支持jpg,png,jpeg格式大小5M以内的图片</span>
            <el-upload
               class="upload-demo"
               action="/api/loadUserIcon"
@@ -80,31 +80,31 @@ export default {
   },
   watch: {},
   computed: {
-    ...mapState(['userName','userIconUrl']),
-    ...mapGetters(['getUsername']),
+    ...mapState(['userName', 'userIconUrl']),
+    ...mapGetters(['getUsername'])
   },
   methods: {
     ...mapActions(['setUserIconUrl']),
-    beforeUpload(file) {
-      this.uploadData.userName = this.userName;
-      console.log("文件名："+ file.name)
-      this.files = file;
-      const fileType1 = file.name.split('.')[1] == 'jpg'? true: false;
-      const fileType2 = file.name.split('.')[1] == 'png'? true: false;
-      const fileType3 = file.name.split('.')[1] == 'jpeg'? true: false;
-      if(fileType1 === false && fileType2  === false && fileType3  === false) {
+    beforeUpload (file) {
+      this.uploadData.userName = this.userName
+      console.log('文件名：' + file.name)
+      this.files = file
+      const fileType1 = file.name.split('.')[1] === 'jpg'
+      const fileType2 = file.name.split('.')[1] === 'png'
+      const fileType3 = file.name.split('.')[1] === 'jpeg'
+      if (fileType1 === false && fileType2 === false && fileType3 === false) {
         this.$notify.error({
           title: '错误',
-          message: '只支持上传以jpg,png结尾的图片类型'
-        });
-        return false;
+          message: '只支持上传以jpg,png,jpeg结尾的图片类型'
+        })
+        return false
       }
-      if(file.size/1024/1024>5) {
+      if (file.size / 1024 / 1024 > 5) {
         this.$notify.error({
           title: '错误',
           message: '只支持上传小于5M大小的图片'
-        });
-        return false;
+        })
+        return false
       }
     },
     actionToChangeInfo (event) {
@@ -118,8 +118,8 @@ export default {
     },
     // 成功上传后的回调函数
     uploadSuccess (res) {
-      if(res.data.state == 1) {
-        this.setUserIconUrl('data:image/png;base64,'+res.data.userIcon)
+      if (res.data.state === 1) {
+        this.setUserIconUrl('data:image/png;base64,' + res.data.userIcon)
       }
     }
   },

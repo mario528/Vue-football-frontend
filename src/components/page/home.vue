@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-19 17:01:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-27 11:09:07
+ * @LastEditTime: 2019-02-06 13:46:06
  * @Description: file content
  -->
 <template>
@@ -48,22 +48,22 @@
     <div class="homepage-content flex-row">
       <div class="homepage-news"></div>
       <div class="homepage-rank" v-on:click="actionTochangeType">
-        <ul class="rank-swiper">
-          <li class="rank-swiper-item" id="china">中超</li>
-          <li class="rank-swiper-item" id="english">英超</li>
-          <li class="rank-swiper-item" id="spain">西甲</li>
-          <li class="rank-swiper-item" id="dermany">德甲</li>
-          <li class="rank-swiper-item" id="italy">意甲</li>
-          <li class="rank-swiper-item" id="french">法甲</li>
-        </ul>
+        <div class="rank-swiper">
+          <li :class="[leagueType=='china'?'rank-swiper-item-active':'rank-swiper-item']" id="china">中超</li>
+          <li :class="[leagueType=='english'?'rank-swiper-item-active':'rank-swiper-item']" id="english">英超</li>
+          <li :class="[leagueType=='spain'?'rank-swiper-item-active':'rank-swiper-item']" id="spain">西甲</li>
+          <li :class="[leagueType=='dermany'?'rank-swiper-item-active':'rank-swiper-item']" id="dermany">德甲</li>
+          <li :class="[leagueType=='italy'?'rank-swiper-item-active':'rank-swiper-item']" id="italy">意甲</li>
+          <li :class="[leagueType=='french'?'rank-swiper-item-active':'rank-swiper-item']" id="french">法甲</li>
+        </div>
         <div class="rank-header flex-row-y-center">
-          <div class="header-item" v-for="(item,index) in headerList" v-bind:key="index">
+          <div v-bind:class="[index == 0 ? 'header-item-title' : 'header-item']" v-for="(item,index) in headerList" v-bind:key="index">
             {{item}}
           </div>
         </div>
         <div class="rank-content flex-column" v-for="(item,index) in rankContent" v-bind:key="index">
             <div class="rank-content-row flex-row-y-center">
-              <div class="rank-team">{{item.team_name}}</div>
+              <div class="rank-team" id="team-title">{{item.team_name}}</div>
               <div class="rank-team">{{item.matches_total}}</div>
               <div class="rank-team">{{item.matches_won}}</div>
               <div class="rank-team">{{item.matches_draw}}</div>
@@ -78,9 +78,6 @@
 </template>
 
 <script>
-import swiper0 from '../../assets/swiper0.png'
-import swiper1 from '../../assets/swiper1.jpg'
-import swiper2 from '../../assets/swiper2.jpg'
 
 import rankType from '../../utils/rankType'
 export default {
@@ -90,7 +87,6 @@ export default {
   data () {
     return {
       swiperOption: {
-        autoplay: 500,
         speed: 1000,
         loop: true,
         autoplay: true,
@@ -143,40 +139,45 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    getRank(type,callback) {
-      if(typeof type != 'string') {
-        throw new Error('请输入正确的联赛');
+    getRank (type, callback) {
+      let item = [];
+      if (typeof type !== 'string') {
+        throw new Error('请输入正确的联赛')
       }
       this.$http.get('/v1/team_ranking/0?', {
-      params: {
-        season_id: this.getLeagueNum(type),
-        version: 0,
-        refer: 'data_tab',
-        type:'total_ranking',
-        from: 'msite_com'
-      }
-    }).then((result)=> {
-      callback(result)
-    })
+        params: {
+          season_id: this.getLeagueNum(type),
+          version: 0,
+          refer: 'data_tab',
+          type: 'total_ranking',
+          from: 'msite_com'
+        }
+      }).then((result) => {
+        console.log(result.data.content.rounds[0].content.data)
+        result.data.content.rounds[0].content.data.forEach(element => {
+          item.push(element.team_name)
+          console.log(item)
+        });
+        callback(result)
+      })
     },
-    getLeagueNum(leagueStr) {
-      return rankType[leagueStr];
+    getLeagueNum (leagueStr) {
+      return rankType[leagueStr]
     },
-    actionTochangeType(event) {
-      console.log(event.target.id)
-      const chooseType = event.target.id;
-      this.getRank(chooseType,(res)=> {
-        this.headerList = res.data.content.rounds[0].content.header;
-        this.rankContent = res.data.content.rounds[0].content.data;
-    })
+    actionTochangeType (event) {
+      this.leagueType = event.target.id
+      this.getRank(this.leagueType, (res) => {
+        this.headerList = res.data.content.rounds[0].content.header
+        this.rankContent = res.data.content.rounds[0].content.data
+      })
     }
   },
   created () {
-    this.getRank('china',(res)=> {
-      this.headerList = res.data.content.rounds[0].content.header;
-      this.rankContent = res.data.content.rounds[0].content.data;
+    this.getRank('china', (res) => {
+      this.headerList = res.data.content.rounds[0].content.header
+      this.rankContent = res.data.content.rounds[0].content.data
     })
-    this.$http.get('/api/home').then((result)=> {
+    this.$http.get('/api/home').then((result) => {
       this.bannerList = result.data.banner
     })
   },
@@ -265,10 +266,10 @@ export default {
   font-weight: 400;
 }
 .rank-header {
-  width: 35vw;
+  width: 100%;
 }
 .header-item {
-  width: 5vw;
+  width: 3vw;
   text-align: center;
 }
 .rank-content {
@@ -276,29 +277,53 @@ export default {
   width: 5vw;
 }
 .rank-content-row {
-  width: 35vw;
+  width: 24vw;
   background-color: rgb(50, 50, 50);
+}
+#team-title {
+  width: 6vw;
+}
+.header-item-title {
+  width: 6vw;
+  text-align: center;
+  background-color: rgb(82, 173, 75);
+  padding: 5px 0px 5px 0px;
+  color: white;
 }
 .rank-team {
   text-align: center;
-  width: 5vw;
+  width: 3vw;
   padding: 5px 0px 5px 0px;
   font-size: 12px;
   color: white;
   border-bottom: 1px solid rgb(37, 37, 37);
 }
 .rank-swiper {
-  width: 32vw;
-  background-color: rgb(82, 173, 75);
-  overflow: scroll;
+  width: 24vw;
+  height: 50px;
+  background-color: rgb(50, 50, 50);
+  overflow-x: scroll;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 .rank-swiper-item {
-  width: 8vw;
+  width: 5vw;
   font-size: 16px;
-  border: 1px solid #eeeeee;
+  display: inline-block;
   text-align: center;
   color: white;
   cursor: pointer;
+}
+.rank-swiper-item-active {
+  width: 5vw;
+  font-size: 16px;
+  display: inline-block;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  border-bottom: 2px solid rgb(82, 173, 75);
 }
 .header-item {
   background-color: rgb(82, 173, 75);
@@ -311,5 +336,6 @@ export default {
 .homepage-news {
   width: 50vw;
   height: 400px;
+  background-color: sandybrown;
 }
 </style>

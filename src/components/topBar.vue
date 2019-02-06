@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-26 01:19:29
+ * @LastEditTime: 2019-02-04 21:56:29
  * @Description: file content
  -->
 <template>
@@ -15,7 +15,7 @@
       <router-link to="/home">
         <span v-bind:class="currentIndex==0?'switch-item-active':'switch-item'" id="0">首页</span>
       </router-link>
-      <router-link to="/home">
+      <router-link to="/data/dataSearch">
         <span v-bind:class="currentIndex==1?'switch-item-active':'switch-item'" id="1">数据</span>
       </router-link>
       <router-link to="/home">
@@ -74,7 +74,7 @@ export default {
   },
   watch: {},
   computed: {
-    ...mapState(['isLogin','userName','userIconUrl'])
+    ...mapState(['isLogin', 'userName', 'userIconUrl'])
   },
   methods: {
     ...mapMutations(['CHANGE_LOGIN_DIALOG_STATE']),
@@ -188,6 +188,7 @@ export default {
   color: white;
   margin-left: 5px;
   font-weight: 500;
+  cursor: pointer;
 }
 .state-arrow {
   width: 20px;
