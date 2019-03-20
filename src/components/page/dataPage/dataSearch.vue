@@ -5,11 +5,11 @@
          <img class="company-icon" src="../../../assets/compony_icon.png">
          <div class="company-title">懂球帝</div>
       </div>
-      <el-autocomplete class="data-search" 
+      <el-autocomplete class="data-search"
                 prefix-icon="el-icon-search"
                 :fetch-suggestions="querySearchAsync"
                 @select="handleSelect"
-                placeholder="请输入您要查询的球队,球员,联赛" 
+                placeholder="请输入您要查询的球队,球员,联赛"
                 v-model="userInput">
           <template slot-scope="{ item }">
                 <div class="name">{{ item.value }}</div>
@@ -23,45 +23,45 @@
 
 <script>
 export default {
-  name: "dataSearch",
+  name: 'dataSearch',
   components: {},
   props: {},
-  data() {
+  data () {
     return {
-        userInput: undefined
-    };
+      userInput: undefined
+    }
   },
   watch: {},
   computed: {},
   methods: {
-      querySearchAsync(queryString, callback) {
-          let list = [];
-          this.$http.post('/api/search',{
-            searchQuery: this.userInput
-          }).then((res)=> {
-            res.data.team.forEach(element => {
-              element.value = element.name
-              list.push(element)
-            });
-            callback(list)
-          })
-      },
-      handleSelect(item) {
-        console.log(item)
-        if(item.type = 'team') {
-          this.$router.push({
-            path: '/data/team',
-            query: {
-              teamName: item.value
-            }
-          })
-        }
+    querySearchAsync (queryString, callback) {
+      let list = []
+      this.$http.post('/api/search', {
+        searchQuery: this.userInput
+      }).then((res) => {
+        res.data.team.forEach(element => {
+          element.value = element.name
+          list.push(element)
+        })
+        callback(list)
+      })
+    },
+    handleSelect (item) {
+      console.log(item)
+      if (item.type = 'team') {
+        this.$router.push({
+          path: '/data/team',
+          query: {
+            teamName: item.value
+          }
+        })
       }
+    }
   },
-  created() {},
-  mounted() {
+  created () {},
+  mounted () {
   }
-};
+}
 </script>
 <style scoped>
 .container {
@@ -97,7 +97,7 @@ export default {
 .name {
   float: left;
   margin-left: 10px;
-} 
+}
 .type {
   float: right;
   margin-right: 10px;

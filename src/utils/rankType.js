@@ -1,5 +1,5 @@
 module.exports = {
-  'china': 10219, // 中超
+  'china': 14225, // 中超
   'english': 10267, // 英超
   'dermany': 10294, // 德甲
   'spain': 10332, // 西甲

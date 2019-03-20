@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-02-04 21:56:29
+ * @LastEditTime: 2019-03-20 12:54:52
  * @Description: file content
  -->
 <template>
@@ -18,7 +18,7 @@
       <router-link to="/data/dataSearch">
         <span v-bind:class="currentIndex==1?'switch-item-active':'switch-item'" id="1">数据</span>
       </router-link>
-      <router-link to="/home">
+      <router-link to="/forum">
         <span v-bind:class="currentIndex==2?'switch-item-active':'switch-item'" id="2">球迷圈</span>
       </router-link>
       <router-link to="/home">
@@ -26,11 +26,18 @@
       </router-link>
     </div>
     <div class="tab-bar-search">
-      <el-input
-        placeholder="点击立即搜索"
-        suffix-icon="el-icon-search"
-        v-model="userSearch">
-       </el-input>
+       <el-autocomplete class="data-search"
+                prefix-icon="el-icon-search"
+                :fetch-suggestions="querySearchAsync"
+                @select="handleSelect"
+                placeholder="点击立即搜索"
+                v-model="userSearch"
+                v-on:blur="searchInputLostBlur">
+          <template slot-scope="{ item }">
+                <div class="name">{{ item.value }}</div>
+                <span class="type">{{ item.type }}</span>
+          </template>
+      </el-autocomplete>
     </div>
     <div class="user-area">
       <div class="user-unLogin flex-row" v-if="!isLogin" v-on:click="changeDialogStateBox">
@@ -117,6 +124,32 @@ export default {
           this.$router.push('/home')
           break
       }
+    },
+    querySearchAsync (queryString, callback) {
+      let list = []
+      this.$http.post('/api/search', {
+        searchQuery: this.userSearch
+      }).then((res) => {
+        res.data.team.forEach(element => {
+          element.value = element.name
+          list.push(element)
+        })
+        callback(list)
+      })
+    },
+    handleSelect (item) {
+      console.log(item)
+      if (item.type = 'team') {
+        this.$router.push({
+          path: '/data/team',
+          query: {
+            teamName: item.value
+          }
+        })
+      }
+    },
+    searchInputLostBlur() {
+      this.userSearch = ''
     }
   },
   created () {},

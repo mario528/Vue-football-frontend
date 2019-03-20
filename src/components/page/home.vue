@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-19 17:01:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-02-06 13:46:06
+ * @LastEditTime: 2019-03-20 22:36:24
  * @Description: file content
  -->
 <template>
@@ -23,24 +23,27 @@
       <div class="banner-schedule flex-column-center">
         <div
           class="schedule-item-row flex-row-x-center"
-          v-for="(item,index) in matchList"
+          v-for="(item,index) in hotMatchList"
           v-bind:key="index"
         >
           <div class="schedule-item flex-column-x-center">
-            <img :src="item.itemHome.icon" :alt="item.name" class="team-icon">
-            <div class="team-name">{{item.itemHome.name}}</div>
+            <img :src="item.awayTeamIcon" :alt="item.awayTeamName" class="team-icon">
+            <div class="team-name">{{item.awayTeamName}}</div>
           </div>
           <div class="schedule-item-middle flex-column-center">
-            <div class="match-property">{{item.property}}</div>
-            <div class="match-score flex-row-y-center">
-              <div class="team-score">{{item.itemHome.score}}</div>
+            <div class="match-property">{{item.matchState}}</div>
+            <div class="match-score flex-row-y-center" v-if="item.homeTeamScore">
+              <div class="team-score">{{item.homeTeamScore}}</div>
               <div class="team-score-middle">:</div>
-              <div class="team-score">{{item.itemAway.score}}</div>
-              </div>
+              <div class="team-score">{{item.awayTeamScore}}</div>
+            </div>
+             <div class="match-score flex-row-y-center" v-else>
+              <div class="team-score-middle">-</div>
+            </div>
           </div>
           <div class="schedule-item flex-column-x-center">
-            <img :src="item.itemAway.icon" :alt="item.name" class="team-icon">
-            <div class="team-name">{{item.itemAway.name}}</div>
+            <img :src="item.homeTeamIcon" :alt="item.name" class="team-icon">
+            <div class="team-name">{{item.homeTeamName}}</div>
           </div>
         </div>
       </div>
@@ -69,7 +72,7 @@
               <div class="rank-team">{{item.matches_draw}}</div>
               <div class="rank-team">{{item.matches_lost}}</div>
               <div class="rank-team">{{item.goals_pro}}/{{item.goals_against}}</div>
-              <div class="rank-team">{{item.goals_pro}}</div>
+              <div class="rank-team">{{item.points}}</div>
             </div>
         </div>
       </div>
@@ -91,6 +94,8 @@ export default {
         loop: true,
         autoplay: true,
         grabCursor: true,
+        autoplayDisableOnInteraction: false,
+        stopOnLastSlide: false,
         pagination: {
           el: '.swiper-pagination',
           clickable: true
@@ -104,43 +109,14 @@ export default {
       rankContent: [],
       headerList: [],
       leagueType: 'china',
-      matchList: [
-        {
-          property: '友谊赛',
-          isBegin: false,
-          itemHome: {
-            icon: 'http://img.dongqiudi.com/data/pic/429.png',
-            name: '北京国安',
-            score: 4
-          },
-          itemAway: {
-            icon: 'http://img.dongqiudi.com/data/pic/6557.png',
-            name: '贵州人和',
-            score: 1
-          }
-        },
-        {
-          property: '友谊赛',
-          isBegin: false,
-          itemHome: {
-            icon: 'http://img.dongqiudi.com/data/pic/429.png',
-            name: '北京国安',
-            score: 5
-          },
-          itemAway: {
-            icon: 'http://img.dongqiudi.com/data/pic/6557.png',
-            name: '贵州人和',
-            score: 2
-          }
-        }
-      ]
+      hotMatchList: []
     }
   },
   watch: {},
   computed: {},
   methods: {
     getRank (type, callback) {
-      let item = [];
+      let item = []
       if (typeof type !== 'string') {
         throw new Error('请输入正确的联赛')
       }
@@ -157,7 +133,7 @@ export default {
         result.data.content.rounds[0].content.data.forEach(element => {
           item.push(element.team_name)
           console.log(item)
-        });
+        })
         callback(result)
       })
     },
@@ -178,7 +154,8 @@ export default {
       this.rankContent = res.data.content.rounds[0].content.data
     })
     this.$http.get('/api/home').then((result) => {
-      this.bannerList = result.data.banner
+      this.bannerList = result.data.data.banner
+      this.hotMatchList = result.data.data.hotMathch
     })
   },
   mounted () {}

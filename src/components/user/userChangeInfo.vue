@@ -32,7 +32,6 @@
           </div>
         </div>
         <div class="item-change" v-bind:id="index" v-on:click="actionToChangeInfo" v-if="!item.isShow">
-          <!-- <img src="../../assets/penclie.png" class="item-icon"> -->
           <i class="el-icon-edit item-icon"></i>
           <span class="change-text">修改</span>
         </div>
@@ -57,25 +56,7 @@ export default {
       sex: undefined,
       favouriteTeam: undefined,
       uploadData: {},
-      infoList: [
-        {
-          title: '用户名',
-          isShow: false,
-          placeholder: '请输入用户名',
-          userInput: ''
-        },
-        {
-          title: '个人介绍',
-          isShow: false,
-          placeholder: '请输入个人介绍',
-          userInput: ''
-        },
-        {
-          title: '性别',
-          isShow: false,
-          placeholder: ''
-        }
-      ]
+      infoList: []
     }
   },
   watch: {},
@@ -121,10 +102,23 @@ export default {
       if (res.data.state === 1) {
         this.setUserIconUrl('data:image/png;base64,' + res.data.userIcon)
       }
+    },
+    // 请求用户信息
+    fetchUserInformation (name) {
+      this.$http.post('/api/user/information', {
+        username: name
+      }).then((res) => {
+        console.log(res)
+        debugger
+        this.infoList = res.data.data.infoList
+      })
     }
   },
-  created () {},
-  mounted () {}
+  created () {
+  },
+  mounted () {
+    this.fetchUserInformation(this.userName)
+  }
 }
 </script>
 <style scoped>
