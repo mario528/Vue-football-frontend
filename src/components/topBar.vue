@@ -148,7 +148,7 @@ export default {
         })
       }
     },
-    searchInputLostBlur() {
+    searchInputLostBlur () {
       this.userSearch = ''
     }
   },

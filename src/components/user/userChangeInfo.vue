@@ -109,7 +109,6 @@ export default {
         username: name
       }).then((res) => {
         console.log(res)
-        debugger
         this.infoList = res.data.data.infoList
       })
     }

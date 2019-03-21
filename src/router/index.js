@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2018-12-31 22:40:41
  * @LastEditors: majiaao
- * @LastEditTime: 2019-02-09 18:29:42
+ * @LastEditTime: 2019-03-21 16:02:02
  * @Description: file content
  */
 import Vue from 'vue'
@@ -13,6 +13,7 @@ import notFound from '@/components/page/notFound'
 import home from '@/components/page/home'
 import dataSearch from '@/components/page/dataPage/dataSearch'
 import teamPage from '@/components/page/dataPage/teamPage'
+import teamDataCharts from '@/components/page/dataPage/teamDataCharts'
 import forum from '@/components/forum/forumHomePage'
 Vue.use(Router)
 
@@ -40,6 +41,10 @@ export default new Router({
       meta: {
         needLogin: true
       }
+    },
+    {
+      path: '/data/bi',
+      component: teamDataCharts
     },
     {
       path: '/data/dataSearch',
