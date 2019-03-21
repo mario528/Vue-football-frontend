@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <top-bar></top-bar>
+    <top-bar v-if="showTopBar"></top-bar>
     <login-or-register></login-or-register>
     <router-view></router-view>
   </div>
@@ -15,6 +15,21 @@ export default {
   components: {
     TopBar,
     LoginOrRegister
+  },
+  data() {
+    return{
+      showTopBar: true
+    }
+  },
+  watch: {
+    $route: function(ev) {
+      const routerPath = ev.path;
+      if(routerPath == '/data/bi') {
+        this.showTopBar = false
+      }else {
+        this.showTopBar = true
+      }
+    }
   }
 }
 </script>

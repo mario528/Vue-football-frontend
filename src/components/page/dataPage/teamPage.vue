@@ -64,6 +64,29 @@
         </div>
       </div>
     </div>
+    <div class="team-member flex-column">
+        <div class="team-member-tab flex-row">
+          <div class="team-member-position">位置</div>
+          <div class="team-member-number">号码</div>
+          <div class="team-member-name">姓名</div>
+          <div class="team-member-enter">出场</div>
+          <div class="team-member-score">进球</div>
+          <div class="team-member-flag">国籍</div>
+        </div>
+        <div class="team-member-item flex-row" v-for="(item, index) in teamMember" v-bind:key="index" :class="[index % 2 == 0?'light-bg':'dark-bg']">
+          <div class="team-member-position flex-row-center">{{item.playerLocation}}</div>
+          <div class="team-member-number flex-row-center">{{item.playerNum}}</div>
+          <div class="team-member-name flex-row-y-center">
+            <img :src="item.playerIcon" class="player-icon"/>
+            {{item.playerName}}
+          </div>
+          <div class="team-member-enter flex-row-center">{{item.playerEnterNum}}</div>
+          <div class="team-member-score flex-row-center">{{item.playerScoreNum}}</div>
+          <div class="team-member-flag flex-row-center">
+            <img :src="item.playerNationFlag" class="play-flag"/>
+          </div>
+        </div>
+    </div>
   </div>
 </template>
 
@@ -187,7 +210,7 @@ export default {
       this.$router.push({
           path: '/data/bi',
           query: {
-            
+            teamName: this.teamName
           }
         })
     }
@@ -203,7 +226,7 @@ export default {
 <style scoped>
 .app {
   width: 100vw;
-  height: 100vh;
+  height: auto;
 }
 .team-page-header {
   width: 25vw;
@@ -343,5 +366,51 @@ export default {
 }
 .handle-btn:nth-of-type(1) {
   border-left: 1px solid white;
+}
+.team-member {
+  width: 35vw;
+  margin-top: 30px;
+  padding-left: 3vw;
+} 
+.player-icon {
+  width: 40px;
+  height: 40px;
+}
+.play-flag {
+  width: 25px;
+  height: 25px;
+}
+.team-member-tab {
+  width: 100%;
+  height: 30px;
+  color: white;
+  line-height: 30px;
+  font-size: 14px;
+  background-color: rgb(82, 173, 75);
+}
+.team-member-position {
+  width: 10%;
+}
+.team-member-number {
+  width: 10%;
+}
+.team-member-name {
+  width: 50%;
+}
+.team-member-enter {
+  width: 10%;
+}
+.team-member-score {
+  width: 10%;
+}
+.team-member-flag {
+  width: 10%;
+}
+.light-bg {
+  background-color: white;
+}
+.dark-bg {
+  background-color: rgb(82, 173, 75);
+  color: white;
 }
 </style>
