@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-19 17:01:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-03-20 22:36:24
+ * @LastEditTime: 2019-03-23 18:19:47
  * @Description: file content
  -->
 <template>
@@ -66,7 +66,7 @@
         </div>
         <div class="rank-content flex-column" v-for="(item,index) in rankContent" v-bind:key="index">
             <div class="rank-content-row flex-row-y-center">
-              <div class="rank-team" id="team-title">{{item.team_name}}</div>
+              <div class="rank-team" id="team-title" v-on:click="handleTeamPage(item.team_name)">{{item.team_name}}</div>
               <div class="rank-team">{{item.matches_total}}</div>
               <div class="rank-team">{{item.matches_won}}</div>
               <div class="rank-team">{{item.matches_draw}}</div>
@@ -146,6 +146,14 @@ export default {
         this.headerList = res.data.content.rounds[0].content.header
         this.rankContent = res.data.content.rounds[0].content.data
       })
+    },
+    handleTeamPage(teamName) {
+      this.$router.push({
+          path: '/data/team',
+          query: {
+            teamName: teamName
+          }
+        })
     }
   },
   created () {

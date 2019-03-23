@@ -16,17 +16,17 @@ export default {
     TopBar,
     LoginOrRegister
   },
-  data() {
-    return{
+  data () {
+    return {
       showTopBar: true
     }
   },
   watch: {
-    $route: function(ev) {
-      const routerPath = ev.path;
-      if(routerPath == '/data/bi') {
+    $route: function (ev) {
+      const routerPath = ev.path
+      if (routerPath == '/data/bi') {
         this.showTopBar = false
-      }else {
+      } else {
         this.showTopBar = true
       }
     }

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2018-12-31 22:40:41
  * @LastEditors: majiaao
- * @LastEditTime: 2019-03-21 16:02:02
+ * @LastEditTime: 2019-03-22 11:17:05
  * @Description: file content
  */
 import Vue from 'vue'
