@@ -2,14 +2,14 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-03-23 14:15:13
+ * @LastEditTime: 2019-04-03 09:00:20
  * @Description: file content
  -->
 <template>
   <div class="app theme-background-color page flex-row-y-center">
     <div class="company-detail flex-row-y-center">
       <img class="company-icon" src="../assets/compony_icon.png">
-      <div class="company-title" v-on:click="handleCommand('homePage')">懂球帝</div>
+      <div class="company-title" v-on:click="handleCommand('homePage')">懂球吗</div>
     </div>
     <div class="switch-bar" v-on:click="catchSwitchTab">
       <router-link to="/home">
@@ -139,7 +139,7 @@ export default {
     },
     handleSelect (item) {
       console.log(item)
-      if (item.type = 'team') {
+      if (item.type == 'team') {
         this.$router.push({
           path: '/data/team',
           query: {
@@ -162,6 +162,7 @@ export default {
   height: 80px;
   position: relative;
   background-color: rgb(82, 173, 75);
+  box-shadow: 0 0 30px #cccccc;
 }
 .company-detail {
   margin-left: 10vw;

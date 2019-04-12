@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2018-12-31 22:40:41
  * @LastEditors: majiaao
- * @LastEditTime: 2019-03-22 11:17:05
+ * @LastEditTime: 2019-04-06 01:44:01
  * @Description: file content
  */
 import Vue from 'vue'
@@ -14,7 +14,10 @@ import home from '@/components/page/home'
 import dataSearch from '@/components/page/dataPage/dataSearch'
 import teamPage from '@/components/page/dataPage/teamPage'
 import teamDataCharts from '@/components/page/dataPage/teamDataCharts'
-import forum from '@/components/forum/forumHomePage'
+import forumHome from '@/components/forum/forumHomePage'
+import forumMainPage from '@/components/forum/forumMainPage'
+import forumFound from '@/components/forum/forumFound'
+import forumPage from '@/components/forum/forumPage'
 Vue.use(Router)
 
 export default new Router({
@@ -57,8 +60,26 @@ export default new Router({
     },
     {
       path: '/forum',
-      name: forum,
-      component: forum
+      name: forumHome,
+      component: forumHome,
+      meta: {
+        needLogin: true
+      }
+    },
+    {
+      path: '/forum/home',
+      name: forumMainPage,
+      component: forumMainPage
+    },
+    {
+      path: '/forum/found',
+      name: 'forumFound',
+      component: forumFound
+    },
+    {
+      path: '/forum/page',
+      name: 'forumPage',
+      component: forumPage
     },
     {
       path: '*',

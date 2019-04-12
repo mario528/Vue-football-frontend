@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-19 17:01:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-03-23 18:19:47
+ * @LastEditTime: 2019-03-24 02:50:59
  * @Description: file content
  -->
 <template>
@@ -147,13 +147,13 @@ export default {
         this.rankContent = res.data.content.rounds[0].content.data
       })
     },
-    handleTeamPage(teamName) {
+    handleTeamPage (teamName) {
       this.$router.push({
-          path: '/data/team',
-          query: {
-            teamName: teamName
-          }
-        })
+        path: '/data/team',
+        query: {
+          teamName: teamName
+        }
+      })
     }
   },
   created () {
@@ -282,6 +282,7 @@ export default {
   font-size: 12px;
   color: white;
   border-bottom: 1px solid rgb(37, 37, 37);
+  cursor: pointer;
 }
 .rank-swiper {
   width: 24vw;

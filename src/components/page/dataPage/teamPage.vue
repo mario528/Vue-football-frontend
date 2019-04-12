@@ -35,6 +35,13 @@
           </tr>
         </table>
       </div>
+      <baidu-map
+      class="map"
+      :center="teamCity"
+      :zoom="zoom"
+      ak="oyZk9cTfjcLIgKhbwzeeXC8YD3T2lZCk"
+      @ready="handler"
+    ></baidu-map>
     </div>
     <div class="team-schedule">
       <div class="team-schedule-title">
@@ -80,7 +87,7 @@
         class="team-member-item flex-row"
         v-for="(item, index) in teamMember"
         v-bind:key="index"
-        :class="[index % 2 == 0?'light-bg':'dark-bg']"
+        :class="[index % 2 === 0?'light-bg':'dark-bg']"
       >
         <div class="team-member-position flex-row-center">{{item.playerLocation}}</div>
         <div class="team-member-number flex-row-center">{{item.playerNum}}</div>
@@ -99,7 +106,8 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
+import styleJson from '@/assets/file/mapStyle'
 export default {
   name: 'teamPage',
   components: {},
@@ -114,7 +122,12 @@ export default {
       pageNum: 10,
       teamGrade: [],
       scheduleList: [],
-      page: 0
+      page: 0,
+      styleJson: styleJson,
+      location: {
+        lng: 116.453590,
+        lat: 39.936982
+      }
     }
   },
   watch: {
@@ -126,7 +139,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userName','isLogin'])
+    ...mapState(['userName', 'isLogin'])
   },
   methods: {
     getTeamInfo (teamName) {
@@ -215,7 +228,7 @@ export default {
     },
     pagingFun (ev) {
       const currentType = ev.currentTarget.id
-      currentType == 'next' ? this.page++ : this.page--
+      currentType === 'next' ? this.page++ : this.page--
     },
     actionJumpBI () {
       this.$router.push({
@@ -225,31 +238,52 @@ export default {
         }
       })
     },
-    fetchToFavourite() {
-      if(this.isLogin == false) {
+    fetchToFavourite () {
+      if (this.isLogin === false) {
         this.$message({
-            message: '请先登陆再进行操作哦～',
-            type: 'error'
-          })
-        return;
+          message: '请先登陆再进行操作哦～',
+          type: 'error'
+        })
+        return
       }
-      this.$http.post('/api/team/favourite',{
-        userName: this.userName,
-        teamName: this.teamName
-      }).then((res)=> {
-        const data = res.data.data
-        if(data.state === true) {
-          this.$message({
-            message: `${data.msg}`,
-            type: 'success'
-          })
-        }else {
-          this.$message({
-            message: `${data.msg}`,
-            type: 'error'
-          })
+      this.$http
+        .post('/api/team/favourite', {
+          userName: this.userName,
+          teamName: this.teamName
+        })
+        .then(res => {
+          const data = res.data.data
+          if (data.state === true) {
+            this.$message({
+              message: `${data.msg}`,
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              message: `${data.msg}`,
+              type: 'error'
+            })
+          }
+        })
+    },
+    /**
+     * 获取地址横纵坐标
+    */
+    getLocation () {
+      const baseUrl = 'http://api.map.baidu.com/geocoder/v2/'
+      this.$http.get(this.baseUrl, {
+        params: {
+          address: this.homeCourt,
+          output: 'json',
+          ak: 'oyZk9cTfjcLIgKhbwzeeXC8YD3T2lZCk'
         }
+      }).then((res) => {
+        console.log(res)
       })
+    },
+    handler () {
+      this.location.lng = 16.453590
+      this.location.lat = 39.936982
     }
   },
   created () {
@@ -461,5 +495,10 @@ export default {
 .dark-bg {
   background-color: rgb(82, 173, 75);
   color: white;
+}
+.map {
+  width: 300px;
+  height: 300px;
+  float: left;
 }
 </style>

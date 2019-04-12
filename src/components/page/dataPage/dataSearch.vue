@@ -3,7 +3,7 @@
     <div class="search-place">
       <div class="company-icon-area flex-row-center">
          <img class="company-icon" src="../../../assets/compony_icon.png">
-         <div class="company-title">懂球帝</div>
+         <div class="company-title">懂球吗</div>
       </div>
       <el-autocomplete class="data-search"
                 prefix-icon="el-icon-search"
@@ -48,7 +48,7 @@ export default {
     },
     handleSelect (item) {
       console.log(item)
-      if (item.type = 'team') {
+      if (item.type == 'team') {
         this.$router.push({
           path: '/data/team',
           query: {
@@ -67,6 +67,8 @@ export default {
 .container {
   height: calc(100vh - 80px);
   background-color: antiquewhite;
+  background-image: url('../../../assets/background.jpg');
+  background-size: 100% 100%;
 }
 .company-icon {
   width: 80px;

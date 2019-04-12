@@ -24,7 +24,7 @@ export default {
   watch: {
     $route: function (ev) {
       const routerPath = ev.path
-      if (routerPath == '/data/bi') {
+      if (routerPath === '/data/bi') {
         this.showTopBar = false
       } else {
         this.showTopBar = true
