@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 19:31:48
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-26 01:12:29
+ * @LastEditTime: 2019-04-17 11:33:06
  * @Description: file content
  */
 import Vue from 'vue'
@@ -20,7 +20,8 @@ const state = {
   userIconUrl: '', // 用户头像
   favouriteTeam: '', // 喜欢的球队
   userDialogNum: 0, // 0: 登陆 1:注册
-  isVip: true // 是否是VIP用户
+  isVip: true, // 是否是VIP用户
+  isActivate: false
 }
 export default new Vuex.Store({
   state,

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-12 15:53:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-26 01:15:45
+ * @LastEditTime: 2019-04-17 11:35:21
  * @Description: file content
  */
 const getLoginState = function (state) {
@@ -17,9 +17,13 @@ const getUsername = function (state) {
 const getUserIconUrl = function (state) {
   return state.userIconUrl
 }
+const getisActivate = function (state) {
+  return state.isActivate
+}
 export default {
   getLoginState,
   getIsVip,
   getUsername,
-  getUserIconUrl
+  getUserIconUrl,
+  getisActivate
 }

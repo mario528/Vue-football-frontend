@@ -19,7 +19,7 @@
               :limit="1"
               :on-exceed="handleExceed"
             >
-              <el-button slot="trigger" size="small" type="primary" class="file-btn">选取文件</el-button>
+              <el-button slot="trigger" size="small" type="primary" class="file-btn">选择新头像</el-button>
             </el-upload>
           </div>
         </div>

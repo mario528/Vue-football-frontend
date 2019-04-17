@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-12 15:51:23
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-26 01:14:43
+ * @LastEditTime: 2019-04-17 11:36:39
  * @Description: file content
  */
 import {
@@ -10,7 +10,8 @@ import {
   LOGIN,
   LOGOUT,
   SETUSERNAME,
-  SETUSERICONURL
+  SETUSERICONURL,
+  ACTIVATE
 } from './mutations_types'
 export default {
   changeDialogState ({commit}) {
@@ -27,5 +28,8 @@ export default {
   },
   setUserIconUrl ({commit}, stark) {
     commit(SETUSERICONURL, stark)
+  },
+  setActivate({commit}) {
+    commit(ACTIVATE)
   }
 }

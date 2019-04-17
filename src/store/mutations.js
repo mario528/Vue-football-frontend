@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-12 15:51:34
  * @LastEditors: majiaao
- * @LastEditTime: 2019-03-27 23:37:01
+ * @LastEditTime: 2019-04-17 11:34:31
  * @Description: file content
  */
 import {
@@ -10,7 +10,8 @@ import {
   LOGOUT,
   LOGIN,
   SETUSERNAME,
-  SETUSERICONURL
+  SETUSERICONURL,
+  ACTIVATE
 } from './mutations_types'
 export default {
   [CHANGE_LOGIN_DIALOG_STATE] (state, stark) {
@@ -30,5 +31,8 @@ export default {
   },
   [SETUSERICONURL] (state, stark) {
     state.userIconUrl = stark
+  },
+  [ACTIVATE] (state) {
+    state.isActivate = true
   }
 }

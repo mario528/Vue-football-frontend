@@ -47,8 +47,7 @@ export default {
       })
     },
     handleSelect (item) {
-      console.log(item)
-      if (item.type == 'team') {
+      if (item.type) {
         this.$router.push({
           path: '/data/team',
           query: {
