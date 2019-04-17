@@ -191,6 +191,7 @@ export default {
       let teamScheduleChart = this.$echarts.init(
         document.getElementById('teamScheduleChart')
       )
+      console.log('1')
       teamScheduleChart.setOption({
         xAxis: {
           type: 'category'
