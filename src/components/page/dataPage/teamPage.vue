@@ -184,6 +184,7 @@ export default {
           }
         }
       })
+      console.log(1)
       this.drawTeamScheduleChart(this.teamGrade)
     },
     drawTeamScheduleChart (data) {
