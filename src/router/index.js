@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2018-12-31 22:40:41
  * @LastEditors: majiaao
- * @LastEditTime: 2019-04-06 01:44:01
+ * @LastEditTime: 2019-04-20 23:31:10
  * @Description: file content
  */
 import Vue from 'vue'
@@ -18,6 +18,7 @@ import forumHome from '@/components/forum/forumHomePage'
 import forumMainPage from '@/components/forum/forumMainPage'
 import forumFound from '@/components/forum/forumFound'
 import forumPage from '@/components/forum/forumPage'
+import playerData from '@/components/page/dataPage/playerData'
 Vue.use(Router)
 
 export default new Router({
@@ -52,6 +53,10 @@ export default new Router({
     {
       path: '/data/dataSearch',
       component: dataSearch
+    },
+    {
+      path: '/data/player',
+      component: playerData
     },
     {
       path: '/data/team',

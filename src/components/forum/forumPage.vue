@@ -61,36 +61,36 @@
 
 <script>
 export default {
-  name: "forumPage",
+  name: 'forumPage',
   components: {},
   props: {},
-  data() {
+  data () {
     return {
       content: []
-    };
+    }
   },
   watch: {},
   computed: {},
   methods: {
-    fetchForumData() {
+    fetchForumData () {
       this.$http
-        .post("/api/forum/forumPage", {
+        .post('/api/forum/forumPage', {
           pageId: this.pageId,
           forumName: this.forumName
         })
         .then(res => {
-          const data = res.data.data.data;
-          this.content = data.content;
-        });
+          const data = res.data.data.data
+          this.content = data.content
+        })
     }
   },
-  created() {
-    this.pageId = this.$route.params.pageId;
-    this.forumName = this.$route.params.forumName;
-    this.fetchForumData();
+  created () {
+    this.pageId = this.$route.params.pageId
+    this.forumName = this.$route.params.forumName
+    this.fetchForumData()
   },
-  mounted() {}
-};
+  mounted () {}
+}
 </script>
 <style scoped>
 .app {

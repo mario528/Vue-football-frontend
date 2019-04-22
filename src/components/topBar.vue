@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-04-03 09:00:20
+ * @LastEditTime: 2019-04-22 17:08:22
  * @Description: file content
  -->
 <template>
@@ -26,17 +26,19 @@
       </router-link>
     </div>
     <div class="tab-bar-search">
-       <el-autocomplete class="data-search"
-                prefix-icon="el-icon-search"
-                :fetch-suggestions="querySearchAsync"
-                @select="handleSelect"
-                placeholder="点击立即搜索"
-                v-model="userSearch"
-                v-on:blur="searchInputLostBlur">
-          <template slot-scope="{ item }">
-                <div class="name">{{ item.value }}</div>
-                <span class="type">{{ item.type }}</span>
-          </template>
+      <el-autocomplete
+        class="data-search"
+        prefix-icon="el-icon-search"
+        :fetch-suggestions="querySearchAsync"
+        @select="handleSelect"
+        placeholder="点击立即搜索"
+        v-model="userSearch"
+        v-on:blur="searchInputLostBlur"
+      >
+        <template slot-scope="{ item }">
+          <div class="name">{{ item.value }}</div>
+          <span class="type">{{ item.type }}</span>
+        </template>
       </el-autocomplete>
     </div>
     <div class="user-area">
@@ -58,7 +60,8 @@
           <el-dropdown-item command="usercenter" class="drop-item">用户中心</el-dropdown-item>
           <el-dropdown-item command="changeInfo" class="drop-item">修改信息</el-dropdown-item>
           <el-dropdown-item command="logout" class="drop-item">
-            退出登陆<i class="el-icon-caret-right"></i>
+            退出登陆
+            <i class="el-icon-caret-right"></i>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -67,94 +70,98 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex'
+import { mapActions, mapState, mapMutations } from "vuex";
 export default {
-  name: 'TopBar',
+  name: "TopBar",
   components: {},
   props: {},
-  data () {
+  data() {
     return {
       currentIndex: 0,
       userSettingShow: false,
       userSearch: undefined
-    }
+    };
   },
   watch: {},
   computed: {
-    ...mapState(['isLogin', 'userName', 'userIconUrl'])
+    ...mapState(["isLogin", "userName", "userIconUrl"])
   },
   methods: {
-    ...mapMutations(['CHANGE_LOGIN_DIALOG_STATE']),
-    ...mapActions(['changeDialogState', 'logout']),
-    toast () {
-      this.$notify({
-        title: '成功',
-        message: '账号退出成功',
-        type: 'success'
-      })
-      this.logout()
-      this.$router.push('/home')
+    ...mapMutations(["CHANGE_LOGIN_DIALOG_STATE"]),
+    ...mapActions(["changeDialogState", "logout"]),
+    toast() {
+      this.$http.post("/api/logout", {}).then(res => {
+        this.$notify({
+          title: "成功",
+          message: "账号退出成功",
+          type: "success"
+        });
+        this.logout();
+        this.$router.push("/home");
+      });
     },
-    catchSwitchTab (ev) {
-      this.currentIndex = ev.target.id
+    catchSwitchTab(ev) {
+      this.currentIndex = ev.target.id;
     },
-    changeDialogStateBox (ev) {
-      const currentIndex = ev.target.id
-      this.$store.commit('CHANGE_LOGIN_DIALOG_STATE', {
+    changeDialogStateBox(ev) {
+      const currentIndex = ev.target.id;
+      this.$store.commit("CHANGE_LOGIN_DIALOG_STATE", {
         currentIndex: currentIndex
-      })
+      });
     },
-    actionUserSetting () {
-      this.userSettingShow = !this.userSettingShow
+    actionUserSetting() {
+      this.userSettingShow = !this.userSettingShow;
     },
-    actionLogout () {},
-    actionToLogin () {},
-    handleCommand (command) {
+    actionLogout() {},
+    actionToLogin() {},
+    handleCommand(command) {
       switch (command) {
-        case 'usercenter':
-          this.$router.push('/userCenter')
-          break
-        case 'changeInfo':
-          this.$router.push('/userChangeInfo')
-          break
-        case 'logout':
-          this.toast()
-          break
-        case 'homePage':
-          this.$router.push('/home')
-          break
+        case "usercenter":
+          this.$router.push("/userCenter");
+          break;
+        case "changeInfo":
+          this.$router.push("/userChangeInfo");
+          break;
+        case "logout":
+          this.toast();
+          break;
+        case "homePage":
+          this.$router.push("/home");
+          break;
       }
     },
-    querySearchAsync (queryString, callback) {
-      let list = []
-      this.$http.post('/api/search', {
-        searchQuery: this.userSearch
-      }).then((res) => {
-        res.data.team.forEach(element => {
-          element.value = element.name
-          list.push(element)
+    querySearchAsync(queryString, callback) {
+      let list = [];
+      this.$http
+        .post("/api/search", {
+          searchQuery: this.userSearch
         })
-        callback(list)
-      })
+        .then(res => {
+          res.data.team.forEach(element => {
+            element.value = element.name;
+            list.push(element);
+          });
+          callback(list);
+        });
     },
-    handleSelect (item) {
-      console.log(item)
-      if (item.type == 'team') {
+    handleSelect(item) {
+      console.log(item);
+      if (item.type == "team") {
         this.$router.push({
-          path: '/data/team',
+          path: "/data/team",
           query: {
             teamName: item.value
           }
-        })
+        });
       }
     },
-    searchInputLostBlur () {
-      this.userSearch = ''
+    searchInputLostBlur() {
+      this.userSearch = "";
     }
   },
-  created () {},
-  mounted () {}
-}
+  created() {},
+  mounted() {}
+};
 </script>
 <style scoped>
 .app {
@@ -162,7 +169,7 @@ export default {
   height: 80px;
   position: relative;
   background-color: rgb(82, 173, 75);
-  box-shadow: 0 0 30px #cccccc;
+  /* box-shadow: 0 0 30px #cccccc; */
 }
 .company-detail {
   margin-left: 10vw;

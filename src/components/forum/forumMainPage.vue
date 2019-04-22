@@ -97,74 +97,74 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
-  name: "forumHomePage",
+  name: 'forumHomePage',
   components: {},
   props: {},
-  data() {
+  data () {
     return {
-      searchForum: "",
+      searchForum: '',
       forumInfo: undefined,
       invitation: [],
       isFollowers: false,
-      forumTitle: "",
-      forumContent: "",
+      forumTitle: '',
+      forumContent: '',
       titleTips: false,
       noForum: true
-    };
+    }
   },
   watch: {},
   computed: {
-    ...mapState(["userName", "userIconUrl", "isVip"])
+    ...mapState(['userName', 'userIconUrl', 'isVip'])
   },
   methods: {
-    actionToFoundForum() {
+    actionToFoundForum () {
       this.$router.push({
-        path: "/forum/found",
+        path: '/forum/found',
         query: {
           forumName: this.searchForum
         }
-      });
+      })
     },
-    fetchForumHomePage() {
+    fetchForumHomePage () {
       this.$http
-        .post("/api/forum/forumHome", {
+        .post('/api/forum/forumHome', {
           forumName: this.searchForum,
           userName: this.userName
         })
         .then(res => {
           if (res.data.state == false) {
-            this.noForum = true;
+            this.noForum = true
           } else {
-            this.noForum = false;
-            const data = res.data.data;
-            this.forumInfo = data.forumInfo;
-            this.invitation = data.invitation;
+            this.noForum = false
+            const data = res.data.data
+            this.forumInfo = data.forumInfo
+            this.invitation = data.invitation
           }
-        });
+        })
     },
-    actionToFollow() {
+    actionToFollow () {
       this.$http
-        .post("/api/forum/join", {
+        .post('/api/forum/join', {
           userName: this.userName,
           forumName: this.searchForum
         })
         .then(res => {
-          const state = res.data.state;
+          const state = res.data.state
           if (state == true) {
-            this.isFollowers = true;
+            this.isFollowers = true
           } else {
           }
-        });
+        })
     },
-    actionToPublish() {
-      if (this.forumTitle == "") {
-        this.titleTips = true;
-        return;
+    actionToPublish () {
+      if (this.forumTitle == '') {
+        this.titleTips = true
+        return
       }
       this.$http
-        .post("/api/forum/publish", {
+        .post('/api/forum/publish', {
           userName: this.userName,
           userIcon: this.userIconUrl,
           forumName: this.searchForum,
@@ -173,33 +173,33 @@ export default {
           type: 0 // 0: 发帖人 1: 回帖人
         })
         .then(res => {
-          this.clearAllInput();
-          const state = res.data.data.state;
+          this.clearAllInput()
+          const state = res.data.data.state
           if (state == true) {
-            this.fetchForumHomePage();
+            this.fetchForumHomePage()
           }
-        });
+        })
     },
-    actionReplyForum(id) {
+    actionReplyForum (id) {
       this.$router.push({
-        name: "forumPage",
+        name: 'forumPage',
         params: {
           pageId: id,
           forumName: this.searchForum
         }
-      });
+      })
     },
-    clearAllInput() {
-      this.forumTitle = "";
-      this.forumContent = "";
+    clearAllInput () {
+      this.forumTitle = ''
+      this.forumContent = ''
     }
   },
-  created() {
-    this.searchForum = this.$route.query.forumName;
-    this.fetchForumHomePage();
+  created () {
+    this.searchForum = this.$route.query.forumName
+    this.fetchForumHomePage()
   },
-  mounted() {}
-};
+  mounted () {}
+}
 </script>
 <style scoped>
 .app {

@@ -29,7 +29,7 @@ export default {
   setUserIconUrl ({commit}, stark) {
     commit(SETUSERICONURL, stark)
   },
-  setActivate({commit}) {
+  setActivate ({commit}) {
     commit(ACTIVATE)
   }
 }

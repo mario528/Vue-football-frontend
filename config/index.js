@@ -24,6 +24,13 @@ module.exports = {
         pathRewrite: {
           '^/v1': ''
         }
+      },
+      '/baiduMap': {
+        target: 'http://api.map.baidu.com/geocoder/v2',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/baiduMap': ''
+        }
       }
     },
 

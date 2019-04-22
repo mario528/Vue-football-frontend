@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-19 17:01:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-04-12 17:53:23
+ * @LastEditTime: 2019-04-22 16:34:52
  * @Description: file content
  -->
 <template>
@@ -37,7 +37,7 @@
               <div class="team-score-middle">:</div>
               <div class="team-score">{{item.awayTeamScore}}</div>
             </div>
-             <div class="match-score flex-row-y-center" v-else>
+            <div class="match-score flex-row-y-center" v-else>
               <div class="team-score-middle">-</div>
             </div>
           </div>
@@ -52,28 +52,56 @@
       <div class="homepage-news"></div>
       <div class="homepage-rank" v-on:click="actionTochangeType">
         <div class="rank-swiper">
-          <li :class="[leagueType=='china'?'rank-swiper-item-active':'rank-swiper-item']" id="china">中超</li>
-          <li :class="[leagueType=='english'?'rank-swiper-item-active':'rank-swiper-item']" id="english">英超</li>
-          <li :class="[leagueType=='spain'?'rank-swiper-item-active':'rank-swiper-item']" id="spain">西甲</li>
-          <li :class="[leagueType=='dermany'?'rank-swiper-item-active':'rank-swiper-item']" id="dermany">德甲</li>
-          <li :class="[leagueType=='italy'?'rank-swiper-item-active':'rank-swiper-item']" id="italy">意甲</li>
-          <li :class="[leagueType=='french'?'rank-swiper-item-active':'rank-swiper-item']" id="french">法甲</li>
+          <li
+            :class="[leagueType=='china'?'rank-swiper-item-active':'rank-swiper-item']"
+            id="china"
+          >中超</li>
+          <li
+            :class="[leagueType=='english'?'rank-swiper-item-active':'rank-swiper-item']"
+            id="english"
+          >英超</li>
+          <li
+            :class="[leagueType=='spain'?'rank-swiper-item-active':'rank-swiper-item']"
+            id="spain"
+          >西甲</li>
+          <li
+            :class="[leagueType=='dermany'?'rank-swiper-item-active':'rank-swiper-item']"
+            id="dermany"
+          >德甲</li>
+          <li
+            :class="[leagueType=='italy'?'rank-swiper-item-active':'rank-swiper-item']"
+            id="italy"
+          >意甲</li>
+          <li
+            :class="[leagueType=='french'?'rank-swiper-item-active':'rank-swiper-item']"
+            id="french"
+          >法甲</li>
         </div>
         <div class="rank-header flex-row-y-center">
-          <div v-bind:class="[index == 0 ? 'header-item-title' : 'header-item']" v-for="(item,index) in headerList" v-bind:key="index">
-            {{item}}
-          </div>
+          <div
+            v-bind:class="[index == 0 ? 'header-item-title' : 'header-item']"
+            v-for="(item,index) in headerList"
+            v-bind:key="index"
+          >{{item}}</div>
         </div>
-        <div class="rank-content flex-column" v-for="(item,index) in rankContent" v-bind:key="index">
-            <div class="rank-content-row flex-row-y-center">
-              <div class="rank-team" id="team-title" v-on:click="handleTeamPage(item.team_name)">{{item.team_name}}</div>
-              <div class="rank-team">{{item.matches_total}}</div>
-              <div class="rank-team">{{item.matches_won}}</div>
-              <div class="rank-team">{{item.matches_draw}}</div>
-              <div class="rank-team">{{item.matches_lost}}</div>
-              <div class="rank-team">{{item.goals_pro}}/{{item.goals_against}}</div>
-              <div class="rank-team">{{item.points}}</div>
-            </div>
+        <div
+          class="rank-content flex-column"
+          v-for="(item,index) in rankContent"
+          v-bind:key="index"
+        >
+          <div class="rank-content-row flex-row-y-center">
+            <div
+              class="rank-team"
+              id="team-title"
+              v-on:click="handleTeamPage(item.team_name)"
+            >{{item.team_name}}</div>
+            <div class="rank-team">{{item.matches_total}}</div>
+            <div class="rank-team">{{item.matches_won}}</div>
+            <div class="rank-team">{{item.matches_draw}}</div>
+            <div class="rank-team">{{item.matches_lost}}</div>
+            <div class="rank-team">{{item.goals_pro}}/{{item.goals_against}}</div>
+            <div class="rank-team">{{item.points}}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -81,13 +109,13 @@
 </template>
 
 <script>
-
-import rankType from '../../utils/rankType'
+import rankType from "../../utils/rankType";
+import { mapGetters, mapActions, mapState } from "vuex";
 export default {
-  name: 'Home',
+  name: "Home",
   components: {},
   props: {},
-  data () {
+  data() {
     return {
       swiperOption: {
         speed: 1000,
@@ -97,77 +125,93 @@ export default {
         autoplayDisableOnInteraction: false,
         stopOnLastSlide: false,
         pagination: {
-          el: '.swiper-pagination',
+          el: ".swiper-pagination",
           clickable: true
         },
         navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev"
         }
       },
       bannerList: [],
       rankContent: [],
       headerList: [],
-      leagueType: 'china',
+      leagueType: "china",
       hotMatchList: []
-    }
+    };
   },
   watch: {},
   computed: {},
   methods: {
-    getRank (type, callback) {
-      let item = []
-      if (typeof type !== 'string') {
-        throw new Error('请输入正确的联赛')
+    ...mapActions([
+      "changeDialogState",
+      "login",
+      "setUsername",
+      "setUserIconUrl"
+    ]),
+    getRank(type, callback) {
+      let item = [];
+      if (typeof type !== "string") {
+        throw new Error("请输入正确的联赛");
       }
-      this.$http.get('/v1/team_ranking/0?', {
-        params: {
-          season_id: this.getLeagueNum(type),
-          version: 0,
-          refer: 'data_tab',
-          type: 'total_ranking',
-          from: 'msite_com'
-        }
-      }).then((result) => {
-        console.log(result.data.content.rounds[0].content.data)
-        result.data.content.rounds[0].content.data.forEach(element => {
-          item.push(element.team_name)
-          console.log(item)
+      this.$http
+        .get("/v1/team_ranking/0?", {
+          params: {
+            season_id: this.getLeagueNum(type),
+            version: 0,
+            refer: "data_tab",
+            type: "total_ranking",
+            from: "msite_com"
+          }
         })
-        callback(result)
-      })
+        .then(result => {
+          console.log(result.data.content.rounds[0].content.data);
+          result.data.content.rounds[0].content.data.forEach(element => {
+            item.push(element.team_name);
+            console.log(item);
+          });
+          callback(result);
+        });
     },
-    getLeagueNum (leagueStr) {
-      return rankType[leagueStr]
+    getLeagueNum(leagueStr) {
+      return rankType[leagueStr];
     },
-    actionTochangeType (event) {
-      this.leagueType = event.target.id
-      this.getRank(this.leagueType, (res) => {
-        this.headerList = res.data.content.rounds[0].content.header
-        this.rankContent = res.data.content.rounds[0].content.data
-      })
+    actionTochangeType(event) {
+      this.leagueType = event.target.id;
+      this.getRank(this.leagueType, res => {
+        this.headerList = res.data.content.rounds[0].content.header;
+        this.rankContent = res.data.content.rounds[0].content.data;
+      });
     },
-    handleTeamPage (teamName) {
+    handleTeamPage(teamName) {
       this.$router.push({
-        path: '/data/team',
+        path: "/data/team",
         query: {
           teamName: teamName
         }
-      })
+      });
     }
   },
-  created () {
-    this.getRank('china', (res) => {
-      this.headerList = res.data.content.rounds[0].content.header
-      this.rankContent = res.data.content.rounds[0].content.data
-    })
-    this.$http.get('/api/home').then((result) => {
-      this.bannerList = result.data.data.banner
-      this.hotMatchList = result.data.data.hotMathch
-    })
+  created() {
+    this.getRank("china", res => {
+      this.headerList = res.data.content.rounds[0].content.header;
+      this.rankContent = res.data.content.rounds[0].content.data;
+    });
+    this.$http.get("/api/home").then(result => {
+      this.bannerList = result.data.data.banner;
+      this.hotMatchList = result.data.data.hotMathch;
+      if (result.data.data.userInfo) {
+        const userInfo = result.data.data.userInfo;
+        const username = userInfo.username;
+        const userImageUrl = userInfo.userImageUrl;
+        this.login();
+        this.setUsername(username);
+        this.setUserIconUrl(userImageUrl)
+      }
+    });
   },
-  mounted () {}
-}
+  mounted() {}
+};
 </script>
 <style>
 .homepage-banner {
@@ -175,12 +219,12 @@ export default {
   width: 75vw;
   height: 20vw;
   margin-top: 40px;
-  margin-left: calc((100vw - 75vw)/2);
+  margin-left: calc((100vw - 75vw) / 2);
 }
 .homepage-content {
   width: 75vw;
   height: 50vw;
-  margin-left: calc((100vw - 75vw)/2);
+  margin-left: calc((100vw - 75vw) / 2);
   margin-top: 20px;
 }
 .scrollview {
