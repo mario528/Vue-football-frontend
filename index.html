@@ -3,9 +3,83 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel ="shortcut icon" type="image/x-icon" href="./src/assets/compony_icon.png">
     <title>懂球吗</title>
   </head>
+  <style type="text/css">
+    #loding {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 100;
+    }
+    @keyframes loading-jump {
+      20% {
+        opacity: .3;
+        transform: scale(.4)
+      }
+      30% {
+        opacity: .4;
+        transform: scale(.6);
+        transform: translateY(-10px);
+      }
+      55% {
+        opacity: .5;
+        transform: scale(.6);
+        transform: translateY(10px);
+      }
+      75% {
+        opacity: .7;
+        transform: scale(.8);
+        transform: translateY(10px);
+      }
+      90% {
+        opacity: .9;
+        transform: scale(.8);
+        transform: translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        transform: translateY(0px);
+      }
+    }
+    .loadingJump {
+      background-color: rgb(82, 173, 75);
+      width: 10px;
+      height: 10px;
+      border-radius: 100%;
+      margin: 2px;
+      animation-fill-mode: both;
+      display: inline-block;
+      animation: 1s loading-jump linear;
+    }
+    .loadingJump:nth-of-type(1) {
+      animation-delay: .12s;
+    }
+    .loadingJump:nth-of-type(2) {
+      animation-delay: .24s;
+    }
+    .loadingJump:nth-of-type(3) {
+      animation-delay: .12s;
+    }
+    .loadingJump:nth-of-type(4) {
+      animation-delay: .24s;
+    }
+    .loadingJump:nth-of-type(5) {
+      animation-delay: .12s;
+    }
+  </style>
   <body>
+    <div id="loding">
+      <div class="loading-bar ball-beat">
+        <div class="loadingJump"></div>
+        <div class="loadingJump"></div>
+        <div class="loadingJump"></div>
+        <div class="loadingJump"></div>
+        <div class="loadingJump"></div>
+      </div>
+    </div>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>

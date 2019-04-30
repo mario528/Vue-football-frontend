@@ -77,7 +77,7 @@ export default {
     },
     actionToChangeInfo () {
       this.$router.push('/userChangeInfo')
-    }
+    },
   },
   created () {},
   mounted () {}

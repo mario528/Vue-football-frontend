@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-19 17:01:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-04-22 16:34:52
+ * @LastEditTime: 2019-04-29 13:41:32
  * @Description: file content
  -->
 <template>
@@ -164,8 +164,7 @@ export default {
             from: "msite_com"
           }
         })
-        .then(result => {
-          console.log(result.data.content.rounds[0].content.data);
+        .then((result) => {
           result.data.content.rounds[0].content.data.forEach(element => {
             item.push(element.team_name);
             console.log(item);
@@ -193,7 +192,7 @@ export default {
     }
   },
   created() {
-    this.getRank("china", res => {
+    this.getRank("china", (res) => {
       this.headerList = res.data.content.rounds[0].content.header;
       this.rankContent = res.data.content.rounds[0].content.data;
     });
@@ -206,7 +205,7 @@ export default {
         const userImageUrl = userInfo.userImageUrl;
         this.login();
         this.setUsername(username);
-        this.setUserIconUrl(userImageUrl)
+        this.setUserIconUrl(userImageUrl);
       }
     });
   },

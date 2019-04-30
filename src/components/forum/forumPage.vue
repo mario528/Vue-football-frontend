@@ -4,7 +4,7 @@
       <div class="forum-page-title flex-row-space-between">
         <div class="forum-title">{{content[0].forumTitle}}</div>
         <div class="flex-row-y-center forum-title-right">
-          <div class="forum-title-btn">只看楼主</div>
+          <div class="forum-title-btn" v-on:click="actionOnlyPublisher">只看楼主</div>
           <div class="forum-title-btn">收藏</div>
           <div class="forum-title-btn flex-row-y-center">
             <img src="../../assets/reply_icon.png" class="forum-title-btn-img">
@@ -41,56 +41,82 @@
           <span class="forum-publish-title-span">发表回复</span>
         </div>
         <el-input
-          v-model="forumTitle"
-          class="forum-publish-title"
-          placeholder="发贴请遵守发帖规则，严禁发布各类虚假欺诈信息"
-        ></el-input>
-        <div class="forum-publish-title-tips" v-if="titleTips">标题不能为空</div>
-        <el-input
           class="forum-publish-textarea"
           type="textarea"
           :autosize="{ minRows: 10, maxRows: 20}"
-          placeholder="请输入内容"
+          placeholder="发贴请遵守发帖规则，严禁发布各类虚假欺诈信息"
           v-model="forumContent"
         ></el-input>
-        <el-button type="success" class="forum-publish-btn" v-on:click="actionToPublish">发表</el-button>
+        <el-button type="success" class="forum-publish-btn" v-on:click="actionToPublish">回复</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
 export default {
-  name: 'forumPage',
+  name: "forumPage",
   components: {},
   props: {},
-  data () {
+  data() {
     return {
       content: []
-    }
+    };
   },
   watch: {},
-  computed: {},
+  computed: {
+    ...mapState(["isLogin", "userName", "userIconUrl"])
+  },
   methods: {
-    fetchForumData () {
+    fetchForumData() {
       this.$http
-        .post('/api/forum/forumPage', {
+        .post("/api/forum/forumPage", {
           pageId: this.pageId,
           forumName: this.forumName
         })
         .then(res => {
-          const data = res.data.data.data
-          this.content = data.content
+          const data = res.data.data.data;
+          this.content = data.content;
+        });
+    },
+    actionToPublish() {
+      this.$http
+        .post("/api/forum/reply", {
+          pageId: this.pageId,
+          forumName: this.forumName,
+          forumContent: this.forumContent,
+          jordansw: this.userName,
+          userIcon: this.userIconUrl,
+          type: this.content[0].jordansw == this.userName ? 0 : 1
         })
+        .then(res => {
+          const status = res.data.status;
+          if (status) {
+            this.clearInput();
+            this.$message({
+              message: `回复成功`,
+              type: 'success'
+            })
+            this.fetchForumData();
+          }
+        });
+    },
+    clearInput() {
+      this.forumContent = "";
+      this.forumTitle = "";
+    },
+    actionOnlyPublisher() {
+      
     }
   },
-  created () {
-    this.pageId = this.$route.params.pageId
-    this.forumName = this.$route.params.forumName
-    this.fetchForumData()
+  created() {
+    this.pageId = this.$route.params.pageId;
+    this.forumName = this.$route.params.forumName;
+    this.fetchForumData();
   },
-  mounted () {}
-}
+  mounted() {}
+};
 </script>
 <style scoped>
 .app {
@@ -140,6 +166,7 @@ export default {
 .item-right {
   width: 80%;
   height: auto;
+  position: relative;
 }
 .user-icon-border {
   width: 90px;
@@ -183,10 +210,11 @@ export default {
 }
 .item-footer {
   width: 95%;
-  margin-top: 30px;
-  margin-bottom: 15px;
   font-size: 12px;
   color: #999999;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }
 .item-time {
   margin-left: 20px;
@@ -214,6 +242,9 @@ export default {
   border-bottom: rgb(82, 173, 75) 2px solid;
 }
 .forum-publish-btn {
-    text-align: center;
+  text-align: center;
+}
+.forum-publish-textarea {
+  margin-top: 20px;
 }
 </style>

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-12 15:53:48
  * @LastEditors: majiaao
- * @LastEditTime: 2019-04-17 11:33:35
+ * @LastEditTime: 2019-04-27 00:34:57
  * @Description: file content
  */
 export const CHANGE_LOGIN_DIALOG_STATE = 'CHANGE_LOGIN_DIALOG_STATE'

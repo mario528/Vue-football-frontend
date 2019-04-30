@@ -70,98 +70,98 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from "vuex";
+import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
-  name: "TopBar",
+  name: 'TopBar',
   components: {},
   props: {},
-  data() {
+  data () {
     return {
       currentIndex: 0,
       userSettingShow: false,
       userSearch: undefined
-    };
+    }
   },
   watch: {},
   computed: {
-    ...mapState(["isLogin", "userName", "userIconUrl"])
+    ...mapState(['isLogin', 'userName', 'userIconUrl'])
   },
   methods: {
-    ...mapMutations(["CHANGE_LOGIN_DIALOG_STATE"]),
-    ...mapActions(["changeDialogState", "logout"]),
-    toast() {
-      this.$http.post("/api/logout", {}).then(res => {
+    ...mapMutations(['CHANGE_LOGIN_DIALOG_STATE']),
+    ...mapActions(['changeDialogState', 'logout']),
+    toast () {
+      this.$http.post('/api/logout', {}).then(res => {
         this.$notify({
-          title: "成功",
-          message: "账号退出成功",
-          type: "success"
-        });
-        this.logout();
-        this.$router.push("/home");
-      });
+          title: '成功',
+          message: '账号退出成功',
+          type: 'success'
+        })
+        this.logout()
+        this.$router.push('/home')
+      })
     },
-    catchSwitchTab(ev) {
-      this.currentIndex = ev.target.id;
+    catchSwitchTab (ev) {
+      this.currentIndex = ev.target.id
     },
-    changeDialogStateBox(ev) {
-      const currentIndex = ev.target.id;
-      this.$store.commit("CHANGE_LOGIN_DIALOG_STATE", {
+    changeDialogStateBox (ev) {
+      const currentIndex = ev.target.id
+      this.$store.commit('CHANGE_LOGIN_DIALOG_STATE', {
         currentIndex: currentIndex
-      });
+      })
     },
-    actionUserSetting() {
-      this.userSettingShow = !this.userSettingShow;
+    actionUserSetting () {
+      this.userSettingShow = !this.userSettingShow
     },
-    actionLogout() {},
-    actionToLogin() {},
-    handleCommand(command) {
+    actionLogout () {},
+    actionToLogin () {},
+    handleCommand (command) {
       switch (command) {
-        case "usercenter":
-          this.$router.push("/userCenter");
-          break;
-        case "changeInfo":
-          this.$router.push("/userChangeInfo");
-          break;
-        case "logout":
-          this.toast();
-          break;
-        case "homePage":
-          this.$router.push("/home");
-          break;
+        case 'usercenter':
+          this.$router.push('/userCenter')
+          break
+        case 'changeInfo':
+          this.$router.push('/userChangeInfo')
+          break
+        case 'logout':
+          this.toast()
+          break
+        case 'homePage':
+          this.$router.push('/home')
+          break
       }
     },
-    querySearchAsync(queryString, callback) {
-      let list = [];
+    querySearchAsync (queryString, callback) {
+      let list = []
       this.$http
-        .post("/api/search", {
+        .post('/api/search', {
           searchQuery: this.userSearch
         })
         .then(res => {
           res.data.team.forEach(element => {
-            element.value = element.name;
-            list.push(element);
-          });
-          callback(list);
-        });
+            element.value = element.name
+            list.push(element)
+          })
+          callback(list)
+        })
     },
-    handleSelect(item) {
-      console.log(item);
-      if (item.type == "team") {
+    handleSelect (item) {
+      console.log(item)
+      if (item.type == 'team') {
         this.$router.push({
-          path: "/data/team",
+          path: '/data/team',
           query: {
             teamName: item.value
           }
-        });
+        })
       }
     },
-    searchInputLostBlur() {
-      this.userSearch = "";
+    searchInputLostBlur () {
+      this.userSearch = ''
     }
   },
-  created() {},
-  mounted() {}
-};
+  created () {},
+  mounted () {}
+}
 </script>
 <style scoped>
 .app {

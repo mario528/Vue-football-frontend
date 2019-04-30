@@ -122,7 +122,9 @@ export default {
 <style scoped>
 .app {
   width: 100vw;
-  height: auto;
+  height: 100vh;
+  background-image: url('../../assets/forum_bg.jpeg');
+  background-size: 100% 100%;
   /* background-image: url('http://www.fcguoan.com/data/slide/20190301sfyjdy.jpg');
   background-size: 100% 100%; */
 }
@@ -165,6 +167,7 @@ export default {
   margin-top: 30px;
   float: left;
   border: 1px solid red;
+  background-color: white;
 }
 .user-icon {
   width: 100px;

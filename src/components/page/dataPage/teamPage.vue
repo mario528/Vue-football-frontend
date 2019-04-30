@@ -170,6 +170,8 @@ export default {
       teamMember: undefined,
       honourList: undefined,
       teamAddress: undefined,
+      homeMatchList: undefined,
+      awayMatchList: undefined,
       schedule: [],
       pageNum: 10,
       teamGrade: [],
@@ -211,7 +213,6 @@ export default {
           this.honourList = data.honourList;
           this.scheduleList = this.schedule.slice(0, 6);
           this.getGradeFluctuate(this.schedule);
-          this.getLocation();
         });
     },
     actionNextPage() {},

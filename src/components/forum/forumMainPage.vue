@@ -10,8 +10,14 @@
         </div>-->
         <div class="forum-name">{{searchForum}}吧</div>
         <div class="forum-state">
-          <div v-if="isFollowers" class="forum-state-islike">已关注|取消关注</div>
-          <div v-if="!isFollowers" class="forum-state-unlike" v-on:click="actionToFollow">+ 关注</div>
+          <div v-if="isFollower" class="forum-state-islike" v-on:click="actionUnfollow">
+            <span class="forum-state-font">
+              <img src="../../assets/hasFollowed.png" class="hasFollowed-icon">已关注
+            </span>
+            <span class="forum-state-font">|</span>
+            <span class="forum-state-font">取消关注</span>
+          </div>
+          <div v-if="!isFollower" class="forum-state-unlike" v-on:click="actionToFollow">+ 关注</div>
         </div>
         <div class="followers">关注者:{{forumInfo.forumFollowerNum}}人</div>
       </div>
@@ -24,7 +30,7 @@
           >
             <div class="forum-item-left">
               <div class="reply-area">
-                <div class="reply-num">1</div>
+                <div class="reply-num">{{item.content.length}}</div>
               </div>
             </div>
             <div class="forum-item-right">
@@ -97,74 +103,76 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
-  name: 'forumHomePage',
+  name: "forumHomePage",
   components: {},
   props: {},
-  data () {
+  data() {
     return {
-      searchForum: '',
+      searchForum: "",
       forumInfo: undefined,
       invitation: [],
-      isFollowers: false,
-      forumTitle: '',
-      forumContent: '',
+      isFollower: false,
+      forumTitle: "",
+      forumContent: "",
       titleTips: false,
       noForum: true
-    }
+    };
   },
   watch: {},
   computed: {
-    ...mapState(['userName', 'userIconUrl', 'isVip'])
+    ...mapState(["userName", "userIconUrl", "isVip"])
   },
   methods: {
-    actionToFoundForum () {
+    actionToFoundForum() {
       this.$router.push({
-        path: '/forum/found',
+        path: "/forum/found",
         query: {
           forumName: this.searchForum
         }
-      })
+      });
     },
-    fetchForumHomePage () {
+    fetchForumHomePage() {
       this.$http
-        .post('/api/forum/forumHome', {
+        .post("/api/forum/forumHome", {
           forumName: this.searchForum,
           userName: this.userName
         })
         .then(res => {
           if (res.data.state == false) {
-            this.noForum = true
+            this.noForum = true;
           } else {
-            this.noForum = false
-            const data = res.data.data
-            this.forumInfo = data.forumInfo
-            this.invitation = data.invitation
+            this.noForum = false;
+            const data = res.data.data;
+            this.forumInfo = data.forumInfo;
+            this.invitation = data.invitation;
+            this.isFollower = data.isFollower;
           }
-        })
+        });
     },
-    actionToFollow () {
+    actionToFollow() {
+      const that = this;
       this.$http
-        .post('/api/forum/join', {
+        .post("/api/forum/join", {
           userName: this.userName,
           forumName: this.searchForum
         })
         .then(res => {
-          const state = res.data.state
-          if (state == true) {
-            this.isFollowers = true
+          const status = res.data.data.status;
+          if (status == true) {
+            that.isFollower = true;
           } else {
           }
-        })
+        });
     },
-    actionToPublish () {
-      if (this.forumTitle == '') {
-        this.titleTips = true
-        return
+    actionToPublish() {
+      if (this.forumTitle == "") {
+        this.titleTips = true;
+        return;
       }
       this.$http
-        .post('/api/forum/publish', {
+        .post("/api/forum/publish", {
           userName: this.userName,
           userIcon: this.userIconUrl,
           forumName: this.searchForum,
@@ -173,33 +181,42 @@ export default {
           type: 0 // 0: 发帖人 1: 回帖人
         })
         .then(res => {
-          this.clearAllInput()
-          const state = res.data.data.state
+          this.clearAllInput();
+          const state = res.data.data.state;
           if (state == true) {
-            this.fetchForumHomePage()
+            this.fetchForumHomePage();
           }
-        })
+        });
     },
-    actionReplyForum (id) {
+    actionReplyForum(id) {
       this.$router.push({
-        name: 'forumPage',
+        name: "forumPage",
         params: {
           pageId: id,
           forumName: this.searchForum
         }
-      })
+      });
     },
-    clearAllInput () {
-      this.forumTitle = ''
-      this.forumContent = ''
+    clearAllInput() {
+      this.forumTitle = "";
+      this.forumContent = "";
+    },
+    actionUnfollow() {
+      this.$http.post('/api/forum/unfollow',{
+        userName: this.userName,
+        forumName: this.searchForum
+      }).then((res)=> {
+        const status = res.data.status;
+        if(status == true) this.isFollower = false
+      })
     }
   },
-  created () {
-    this.searchForum = this.$route.query.forumName
-    this.fetchForumHomePage()
+  created() {
+    this.searchForum = this.$route.query.forumName;
+    this.fetchForumHomePage();
   },
-  mounted () {}
-}
+  mounted() {}
+};
 </script>
 <style scoped>
 .app {
@@ -208,7 +225,10 @@ export default {
   position: relative;
 }
 .no-such-forum {
-  width: 80vw;
+  width: 100vw;
+  height: calc(100vh - 80px);
+  /* background-image: url("../../assets/augo.jpg");
+  background-size: 100% 100%; */
 }
 .no-such-forum-title {
   font-size: 20px;
@@ -238,6 +258,14 @@ export default {
 .forum-state-islike {
   color: white;
   background-color: rgb(82, 173, 75);
+  padding: 5px;
+  cursor: pointer;
+}
+.forum-state-islike:hover {
+  color: white;
+  background-color: rgba(82, 173, 75,.7);
+  padding: 5px;
+  cursor: pointer;
 }
 .forum-state-unlike {
   color: white;
@@ -332,7 +360,7 @@ export default {
 }
 .forum-item-line {
   padding: 10px 20px;
-  width: calc(45vw - 10px)
+  width: calc(45vw - 10px);
 }
 .forum-item-title {
   color: #2d64b3;
@@ -400,9 +428,18 @@ export default {
   margin-top: 50px;
 }
 .forum-item-content {
-  overflow:hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
-  white-space:nowrap;
+  white-space: nowrap;
   max-width: 70%;
+}
+.hasFollowed-icon {
+  width: 15px;
+  height: 15px;
+  padding: 0px 5px;
+}
+.forum-state-font {
+  font-size: 16px;
+  padding: 5px;
 }
 </style>

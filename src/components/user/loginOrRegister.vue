@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-12 18:40:54
  * @LastEditors: majiaao
- * @LastEditTime: 2019-01-27 15:50:58
+ * @LastEditTime: 2019-04-28 17:03:11
  * @Description: file content
  -->
 <template>
@@ -39,7 +39,7 @@
         <div class="card-bottom flex-row-space-between">
           <div>
             没有账号？
-            <span class="bottom-text" v-on:click="changeDialogState">注册</span>
+            <span class="bottom-text" v-on:click="changeLoginDialogNum(1)">注册</span>
           </div>
           <span class="bottom-text">忘记密码</span>
         </div>
@@ -63,7 +63,11 @@
             v-model="registerData.password"
           >
           <button class="card-btn theme-background-color" v-on:click="actionToRegister">注册</button>
-          <span class="bottom-text" style="text-align: center" v-on:click="changeDialogState">已有账号登陆</span>
+          <span
+            class="bottom-text"
+            style="text-align: center"
+            v-on:click="changeLoginDialogNum(0)"
+          >已有账号登陆</span>
         </div>
       </div>
     </div>
@@ -71,17 +75,17 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapState } from 'vuex'
+import { mapGetters, mapActions, mapState } from "vuex";
 
-import animalIconCommon from '../../assets/common_login_icon.png'
-import animalIconActive from '../../assets/common_login_active.png'
-import animalIconPassword from '../../assets/common_login_password.png'
+import animalIconCommon from "../../assets/common_login_icon.png";
+import animalIconActive from "../../assets/common_login_active.png";
+import animalIconPassword from "../../assets/common_login_password.png";
 
 export default {
-  name: 'LoginOrRegister',
+  name: "LoginOrRegister",
   components: {},
   props: [],
-  data () {
+  data() {
     return {
       state: 0, // 0: 登录 1: 注册
       dialogShow: false,
@@ -95,124 +99,149 @@ export default {
         password: undefined,
         telephone: undefined
       }
-    }
+    };
   },
   watch: {},
   computed: {
-    ...mapState(['userDialogNum']),
-    ...mapGetters(['getLoginState'])
+    ...mapState(["userDialogNum"]),
+    ...mapGetters(["getLoginState"])
   },
   methods: {
-    ...mapActions(['changeDialogState', 'login', 'setUsername', 'setUserIconUrl']),
-    clearAllInput () {
-      const ObjArray = [this.loginData, this.registerData]
+    ...mapActions([
+      "changeDialogState",
+      "changeLoginDialogNum",
+      "login",
+      "setUsername",
+      "setUserIconUrl"
+    ]),
+    clearAllInput() {
+      const ObjArray = [this.loginData, this.registerData];
       ObjArray.forEach(element => {
-        Object.keys(element).forEach((item) => {
-          element[item] = ''
-        })
-      })
+        Object.keys(element).forEach(item => {
+          element[item] = "";
+        });
+      });
     },
-    userNameFocus () {
-      this.iconShow = animalIconActive
+    userNameFocus() {
+      this.iconShow = animalIconActive;
     },
-    userBlur () {
-      this.iconShow = animalIconCommon
+    userBlur() {
+      this.iconShow = animalIconCommon;
     },
-    passwordFocus () {
-      this.iconShow = animalIconPassword
+    passwordFocus() {
+      this.iconShow = animalIconPassword;
     },
-    actionToLogin () {
-      const that = this
-      if (this.loginData.userName === '' || this.loginData.userName === undefined) {
-        this.clearAllInput()
+    actionToLogin() {
+      const that = this;
+      if (
+        this.loginData.userName === "" ||
+        this.loginData.userName === undefined
+      ) {
+        this.clearAllInput();
         this.$notify.error({
-          title: '',
-          message: '用户名输入有误，请重新输入'
-        })
-      } else if (this.loginData.password === '' || this.loginData.password === undefined) {
-        this.clearAllInput()
+          title: "",
+          message: "用户名输入有误，请重新输入"
+        });
+      } else if (
+        this.loginData.password === "" ||
+        this.loginData.password === undefined
+      ) {
+        this.clearAllInput();
         this.$notify.error({
-          title: '',
-          message: '密码输入有误，请重新输入'
-        })
+          title: "",
+          message: "密码输入有误，请重新输入"
+        });
       }
-      this.$http.post('/api/login', {
-        username: this.loginData.userName,
-        password: this.loginData.password
-      }).then((res) => {
-        if (res.data.data[0].state === 1) {
-          that.$message({
-            message: '登陆成功',
-            type: 'success'
-          })
-          this.setUserIconUrl(res.data.data[0].userIcon)
-          this.setUsername(this.loginData.userName)
-          this.changeDialogState()
-          this.login()
-          this.clearAllInput()
-        } else if (res.data.data[0].state === -1) {
-          this.$message.error('密码错误')
-        } else if (res.data.data[0].state === 2) {
-          this.$message.error('输入的用户名不存在')
-        }
-      })
+      this.$http
+        .post("/api/login", {
+          username: this.loginData.userName,
+          password: this.loginData.password
+        })
+        .then(res => {
+          if (res.data.data[0].state === 1) {
+            that.$message({
+              message: "登陆成功",
+              type: "success"
+            });
+            this.setUserIconUrl(res.data.data[0].userIcon);
+            this.setUsername(this.loginData.userName);
+            this.changeDialogState();
+            this.login();
+            this.clearAllInput();
+          } else if (res.data.data[0].state === -1) {
+            this.$message.error("密码错误");
+          } else if (res.data.data[0].state === 2) {
+            this.$message.error("输入的用户名不存在");
+          }
+        });
     },
     // 注册模块
-    actionToRegister () {
-      const that = this
-      if (this.registerData.userName === '' || this.registerData.userName === undefined) {
-        this.clearAllInput()
+    actionToRegister() {
+      const that = this;
+      if (
+        this.registerData.userName === "" ||
+        this.registerData.userName === undefined
+      ) {
+        this.clearAllInput();
         this.$notify.error({
-          title: '',
-          message: '用户名输入有误，请重新输入'
-        })
-      } else if (this.registerData.password === '' || this.registerData.password === undefined) {
-        this.clearAllInput()
+          title: "",
+          message: "用户名输入有误，请重新输入"
+        });
+      } else if (
+        this.registerData.password === "" ||
+        this.registerData.password === undefined
+      ) {
+        this.clearAllInput();
         this.$notify.error({
-          title: '',
-          message: '密码输入有误，请重新输入'
-        })
-      } else if (this.registerData.telephone === '' || this.registerData.telephone === undefined) {
-        this.clearAllInput()
+          title: "",
+          message: "密码输入有误，请重新输入"
+        });
+      } else if (
+        this.registerData.telephone === "" ||
+        this.registerData.telephone === undefined
+      ) {
+        this.clearAllInput();
         this.$notify.error({
-          title: '',
-          message: '手机号输入有误，请重新输入'
-        })
+          title: "",
+          message: "手机号输入有误，请重新输入"
+        });
       }
-      this.$http.post('/api/register', {
-        username: this.registerData.userName,
-        password: this.registerData.password,
-        telephone: this.registerData.telephone
-      }).then((res) => {
-        if (res.data[0].state === 1) {
-          that.$message({
-            message: '恭喜您,注册成功',
-            type: 'success'
-          })
-        }
-        this.setUserIconUrl(res.data[0].data.userIcon)
-        this.setUsername(this.registerData.userName)
-        this.changeDialogState()
-        this.login()
-        this.clearAllInput()
-      })
+      this.$http
+        .post("/api/register", {
+          username: this.registerData.userName,
+          password: this.registerData.password,
+          telephone: this.registerData.telephone
+        })
+        .then(res => {
+          if (res.data[0].state === 1) {
+            that.$message({
+              message: "恭喜您,注册成功",
+              type: "success"
+            });
+          }
+          this.setUserIconUrl(res.data[0].data.userIcon);
+          this.setUsername(this.registerData.userName);
+          this.changeDialogState();
+          this.login();
+          this.clearAllInput();
+        });
     },
-    actionSwitchTab () {
+    actionSwitchTab() {
       this.loginData = {
-        userName: '',
-        password: ''
-      }
+        userName: "",
+        password: ""
+      };
       this.registerData = {
-        userName: '',
-        password: '',
-        telephone: ''
-      }
-      this.state === 1 ? (this.state = 0) : (this.state = 1)
+        userName: "",
+        password: "",
+        telephone: ""
+      };
+      this.state === 1 ? (this.state = 0) : (this.state = 1);
     }
   },
-  created () {},
-  mounted () {}
-}
+  created() {},
+  mounted() {}
+};
 </script>
 <style scoped>
 * {

@@ -30,6 +30,10 @@ export default {
         this.showTopBar = true
       }
     }
+  },
+  created() {
+    let loading = document.getElementById('loding');
+    if(loading != null) document.body.removeChild(loading)
   }
 }
 </script>

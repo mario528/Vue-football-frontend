@@ -2,11 +2,12 @@
  * @Author: majiaao
  * @Date: 2019-01-12 15:51:34
  * @LastEditors: majiaao
- * @LastEditTime: 2019-04-17 11:34:31
+ * @LastEditTime: 2019-04-27 00:38:02
  * @Description: file content
  */
 import {
   CHANGE_LOGIN_DIALOG_STATE,
+  CHANGE_LOGIN_DIALOG_NUM,
   LOGOUT,
   LOGIN,
   SETUSERNAME,
@@ -19,6 +20,9 @@ export default {
     if (stark !== undefined) {
       state.userDialogNum = stark.currentIndex
     }
+  },
+  [CHANGE_LOGIN_DIALOG_NUM] (state,stark) {
+    state.userDialogNum = stark
   },
   [LOGOUT] (state) {
     state.isLogin = false

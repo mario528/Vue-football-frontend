@@ -240,10 +240,6 @@ export default {
   margin-top: -20px;
   /* padding: 10px 0px 10px 30px; */
 }
-.player-ability-content {
-  font-size: 16px;
-  color: white;
-}
 
 .player-ability-main {
   border: white 1px solid;
@@ -334,6 +330,7 @@ export default {
   width: 20vw;
 }
 .player-ability-content {
+  font-size: 16px;
   padding: 5px;
   background-color: #ff7d04;
   color: white;

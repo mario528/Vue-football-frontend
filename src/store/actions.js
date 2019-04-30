@@ -2,20 +2,24 @@
  * @Author: majiaao
  * @Date: 2019-01-12 15:51:23
  * @LastEditors: majiaao
- * @LastEditTime: 2019-04-17 11:36:39
+ * @LastEditTime: 2019-04-27 00:39:13
  * @Description: file content
  */
 import {
   CHANGE_LOGIN_DIALOG_STATE,
+  CHANGE_LOGIN_DIALOG_NUM,
   LOGIN,
   LOGOUT,
   SETUSERNAME,
   SETUSERICONURL,
-  ACTIVATE
+  ACTIVATE,
 } from './mutations_types'
 export default {
-  changeDialogState ({commit}) {
-    commit(CHANGE_LOGIN_DIALOG_STATE)
+  changeDialogState ({commit},stark) {
+    commit(CHANGE_LOGIN_DIALOG_STATE,stark)
+  },
+  changeLoginDialogNum({commit},stark) {
+    commit(CHANGE_LOGIN_DIALOG_NUM,stark)
   },
   login ({commit}) {
     commit(LOGIN)
