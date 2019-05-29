@@ -334,7 +334,6 @@ export default {
           }
         })
         .then(res => {
-          debugger;
           const locationRes = res.data.result.location;
           console.log("经纬度", locationRes);
           this.center[0] = locationRes.lng;

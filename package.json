@@ -2,7 +2,7 @@
   "name": "vue-football-pro",
   "version": "1.0.0",
   "description": "Vue构建的专业足球网站",
-  "author": "majiaao <majiaao@wecash.net>",
+  "author": "majiaao <mario528@163.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -12,7 +12,8 @@
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node build/build.js",
-    "lintfix": "eslint --fix --ext .js,.vue src build config"
+    "lintfix": "eslint --fix --ext .js,.vue src build config",
+    "analyz": "NODE_ENV=production npm_config_report=true npm run build"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -26,7 +27,8 @@
     "vue-cookies": "^1.5.13",
     "vue-router": "^3.0.1",
     "vue-socket.io": "^3.0.7",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "webpack-bundle-analyzer": "^2.13.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

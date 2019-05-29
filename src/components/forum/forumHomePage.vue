@@ -32,7 +32,7 @@
           class="forum-user-item flex-row-y-center"
           v-on:click="actionForumPageByName(item)"
         >
-          {{item}}
+          <span>{{item}}</span>
           <img src="../../assets/star_green.png" class="forum-icon-star">
         </div>
         <div v-if="forumList.length == 0" class="no-forum-list">您暂时还未关注任何球队的球迷圈哦，去加入一个吧</div>
@@ -43,88 +43,89 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters } from "vuex";
 export default {
-  name: 'InputComponentName',
+  name: "InputComponentName",
   components: {},
   props: {},
-  data () {
+  data() {
     return {
       forumList: [],
-      userInput: '',
+      userInput: "",
       hasResult: false
-    }
+    };
   },
   watch: {},
   computed: {
-    ...mapState(['isLogin', 'userName', 'userIconUrl']),
-    ...mapGetters(['getUsername'])
+    ...mapState(["isLogin", "userName", "userIconUrl"]),
+    ...mapGetters(["getUsername"])
   },
   methods: {
-    fetchForumData () {
+    fetchForumData() {
       this.$http
-        .post('/api/forum/home', {
+        .post("/api/forum/home", {
           userName: this.userName
         })
         .then(res => {
-          const data = res.data.data
-          this.forumList = data.userInfo.favForumList
-        })
+          const data = res.data.data;
+          this.forumList = data.userInfo.favForumList;
+        });
     },
-    querySearchAsync (queryString, callback) {
-      let arr = []
+    querySearchAsync(queryString, callback) {
+      let arr = [];
       this.$http
-        .post('/api/forum/search', {
+        .post("/api/forum/search", {
           search_query: this.userInput
         })
-        .then((res) => {
+        .then(res => {
           if (res.data.msg) {
-            this.hasResult = false
+            this.hasResult = false;
           } else {
-            this.hasResult = true
+            this.hasResult = true;
           }
           res.data.searchRes.forEach(element => {
-            element.value = element.forumName
-            arr.push(element)
-          })
-          callback(arr)
-        })
+            element.value = element.forumName;
+            arr.push(element);
+          });
+          callback(arr);
+        });
     },
-    actionUserCenter () {
+    actionUserCenter() {
       this.$router.push({
-        path: '/userCenter'
-      })
+        path: "/userCenter"
+      });
     },
-    actionForumPage () {
+    actionForumPage() {
       this.$router.push({
-        path: '/forum/home',
+        path: "/forum/home",
         query: {
           forumName: this.userInput
         }
-      })
+      });
     },
-    actionForumPageByName (forumName) {
-      console.log(forumName)
+    actionForumPageByName(forumName) {
+      console.log(forumName);
       this.$router.push({
-        path: '/forum/home',
+        path: "/forum/home",
         query: {
           forumName: forumName
         }
-      })
+      });
     }
   },
-  created () {},
-  mounted () {
-    this.fetchForumData()
+  created() {},
+  mounted() {
+    this.fetchForumData();
   }
-}
+};
 </script>
 <style scoped>
 .app {
   width: 100vw;
   height: 100vh;
-  background-image: url('../../assets/forum_bg.jpeg');
+  /* background-image: url('../../assets/forum_bg.jpeg'); */
   background-size: 100% 100%;
+  background-color: #eeeeee;
   /* background-image: url('http://www.fcguoan.com/data/slide/20190301sfyjdy.jpg');
   background-size: 100% 100%; */
 }
@@ -166,7 +167,6 @@ export default {
   margin-left: 5vw;
   margin-top: 30px;
   float: left;
-  border: 1px solid red;
   background-color: white;
 }
 .user-icon {
@@ -174,7 +174,8 @@ export default {
   height: 100px;
   margin-left: 20px;
   margin-top: 20px;
-  border-radius: 5px;
+  border-radius: 50%;
+  border: gainsboro 3px solid;
 }
 .user-name {
   font-size: 18px;
@@ -191,6 +192,21 @@ export default {
   text-align: start;
   display: inline-block;
   border-radius: 5px;
+  cursor: pointer;
+}
+.forum-user-item:hover {
+  width: 8vw;
+  padding: 10px 0px;
+  margin-left: 1vw;
+  margin-top: 10px;
+  box-sizing: border-box;
+  background-color: rgba(152,251,152, .2);
+  border: 2px solid #eeeeee;
+  text-align: start;
+  display: inline-block;
+  border-radius: 5px;
+  cursor: pointer;
+  color: black;
 }
 .forum-user {
   padding-bottom: 30px;
@@ -201,11 +217,13 @@ export default {
   float: left;
   margin-top: 30px;
   margin-left: 30px;
-  border: 1px solid black;
+  background-color: #ffffff;
 }
 .forum-icon-star {
   width: 16px;
   height: 16px;
+  float: right;
+  margin-right: 5px;
 }
 .no-forum-list {
   width: 80%;

@@ -2,24 +2,42 @@
   <div class="app flex-column-x-center">
     <div class="no-such-forum flex-column-center" v-if="noForum">
       <div class="no-such-forum-title">抱歉，暂无该球迷圈，点击立即成为该论坛的发起人吧</div>
-      <img src="../../assets/sorry.png" class="sorry-icon" v-on:click="actionToFoundForum">
+      <img src="../../assets/not_found.jpg" class="sorry-icon" v-on:click="actionToFoundForum">
     </div>
     <div class="forum-main" v-if="!noForum">
       <div class="forum-title flex-row-y-center">
-        <!-- <div class="forum-icon">
-        </div>-->
-        <div class="forum-name">{{searchForum}}吧</div>
-        <div class="forum-state">
-          <div v-if="isFollower" class="forum-state-islike" v-on:click="actionUnfollow">
-            <span class="forum-state-font">
-              <img src="../../assets/hasFollowed.png" class="hasFollowed-icon">已关注
-            </span>
-            <span class="forum-state-font">|</span>
-            <span class="forum-state-font">取消关注</span>
-          </div>
-          <div v-if="!isFollower" class="forum-state-unlike" v-on:click="actionToFollow">+ 关注</div>
+        <div class="forum-icon">
+          <img :src="forumInfo.forumIcon" class="forumIcon">
         </div>
-        <div class="followers">关注者:{{forumInfo.forumFollowerNum}}人</div>
+        <div class="flex-column forum-title-content">
+          <div class="flex-row-y-center">
+            <div class="forum-name flex-row-y-center">{{searchForum}}吧</div>
+            <div class="forum-state flex-row-y-center">
+              <div v-if="isFollower" class="forum-state-islike" v-on:click="actionUnfollow">
+                <span class="forum-state-font">
+                  <img src="../../assets/hasFollowed.png" class="hasFollowed-icon">已关注
+                </span>
+                <span class="forum-state-font">|</span>
+                <span class="forum-state-font">取消关注</span>
+              </div>
+              <div v-if="!isFollower" class="forum-state-unlike" v-on:click="actionToFollow">+ 关注</div>
+            </div>
+            <div class="followers flex-row-y-center">关注者:{{forumInfo.forumFollowerNum}}人</div>
+          </div>
+          <div class="flex-row-y-center forum-introduce">
+            <div>
+              <span>{{forumInfo.forumIntroduce}}</span>
+            </div>
+            <div class="forum-tabs">
+              <el-tag
+                v-for="(item,index) in forumInfo.forumTabs"
+                v-bind:key="index"
+                type="success"
+                class="forum-tabs-item"
+              >{{item}}</el-tag>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="forum-content flex-row">
         <div class="flex-column forum-content-left">
@@ -53,7 +71,10 @@
               </div>
             </div>
           </div>
-          <div class="no-invitation" v-if="invitation.length == 0">暂无帖子哦，快去发第一个吧</div>
+          <div class="no-invitation flex-column-x-center" v-if="invitation.length == 0">
+            <img src="../../assets/no_result.png" class="forum-big-icon">
+            暂无帖子哦，快去发第一个吧
+          </div>
         </div>
         <div class="flex-column forum-content-right">
           <div class="forum-about">
@@ -63,7 +84,8 @@
             </div>
             <div class="found-of-forum">
               <div class="found-by flex-row">
-                <img :src="forumInfo.forumFollowers[0].userIcon" class="user-icon">
+                <img :src="forumInfo.forumFollowers[0].userIcon" 
+                     class="user-icon">
                 <div class="found-by-title">吧主</div>
                 <div class="flex-row">
                   <img src="../../assets/is_vip.png" v-if="isVip" class="vip-icon">
@@ -190,9 +212,9 @@ export default {
     },
     actionReplyForum(id) {
       this.$router.push({
-        name: "forumPage",
-        params: {
-          pageId: id,
+        path: '/forum/page',
+        query: {
+          forumId: id,
           forumName: this.searchForum
         }
       });
@@ -202,20 +224,23 @@ export default {
       this.forumContent = "";
     },
     actionUnfollow() {
-      this.$http.post('/api/forum/unfollow',{
-        userName: this.userName,
-        forumName: this.searchForum
-      }).then((res)=> {
-        const status = res.data.status;
-        if(status == true) this.isFollower = false
-      })
+      this.$http
+        .post("/api/forum/unfollow", {
+          userName: this.userName,
+          forumName: this.searchForum
+        })
+        .then(res => {
+          const status = res.data.status;
+          if (status == true) this.isFollower = false;
+        });
     }
   },
   created() {
     this.searchForum = this.$route.query.forumName;
     this.fetchForumHomePage();
   },
-  mounted() {}
+  mounted() {
+  }
 };
 </script>
 <style scoped>
@@ -227,12 +252,14 @@ export default {
 .no-such-forum {
   width: 100vw;
   height: calc(100vh - 80px);
-  /* background-image: url("../../assets/augo.jpg");
-  background-size: 100% 100%; */
+  border-top: 5px solid white;
+  background-color: black;
 }
 .no-such-forum-title {
   font-size: 20px;
   font-weight: 500;
+  padding: 50px 0px;
+  color: white;
 }
 .forum-title {
   height: 25vh;
@@ -250,7 +277,10 @@ export default {
 .forum-name {
   font-size: 22px;
   color: #333333;
-  margin-left: 5vw;
+}
+.forum-title-content {
+  margin-left: 3vw;
+  margin-top: calc(8vw - 20px);
 }
 .forum-state {
   margin-left: 20px;
@@ -263,7 +293,7 @@ export default {
 }
 .forum-state-islike:hover {
   color: white;
-  background-color: rgba(82, 173, 75,.7);
+  background-color: rgba(82, 173, 75, 0.7);
   padding: 5px;
   cursor: pointer;
 }
@@ -272,6 +302,7 @@ export default {
   padding: 5px;
   font-size: 16px;
   background-color: rgb(82, 173, 75);
+  cursor: pointer;
 }
 .forum-content {
   height: auto;
@@ -304,12 +335,12 @@ export default {
   height: 40px;
 }
 .reply-num {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   text-align: center;
-  line-height: 35px;
+  line-height: 30px;
   background-image: url("../../assets/reply.png");
-  background-size: 40px 40px;
+  background-size: 30px 30px;
 }
 .followers {
   margin-left: 20px;
@@ -441,5 +472,27 @@ export default {
 .forum-state-font {
   font-size: 16px;
   padding: 5px;
+}
+.forumIcon {
+  width: 120px;
+  height: 120px;
+  border: 5px solid rgba(82, 173, 75, 0.6);
+  border-radius: 10px;
+  margin-left: 5vw;
+  margin-top: 5vw;
+}
+.forum-introduce {
+  font-size: 16px;
+  color: #2d64b3;
+  padding-top: 10px;
+}
+.forum-tabs-item {
+  margin: 0px 10px 0px 10px;
+  padding: 0px 20px;
+}
+.forum-big-icon {
+  width: 40px;
+  height: 40px;
+  padding: 20px 0px;
 }
 </style>

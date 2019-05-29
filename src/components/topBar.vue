@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-04-22 17:08:22
+ * @LastEditTime: 2019-05-28 00:04:48
  * @Description: file content
  -->
 <template>
@@ -21,9 +21,9 @@
       <router-link to="/forum">
         <span v-bind:class="currentIndex==2?'switch-item-active':'switch-item'" id="2">球迷圈</span>
       </router-link>
-      <router-link to="/home">
+      <!-- <router-link to="/home">
         <span v-bind:class="currentIndex==3?'switch-item-active':'switch-item'" id="3">官方新闻</span>
-      </router-link>
+      </router-link> -->
     </div>
     <div class="tab-bar-search">
       <el-autocomplete
@@ -56,7 +56,6 @@
           >
         </div>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="usercenter" class="drop-item">{{userName}}</el-dropdown-item>
           <el-dropdown-item command="usercenter" class="drop-item">用户中心</el-dropdown-item>
           <el-dropdown-item command="changeInfo" class="drop-item">修改信息</el-dropdown-item>
           <el-dropdown-item command="logout" class="drop-item">
@@ -90,7 +89,9 @@ export default {
     ...mapMutations(['CHANGE_LOGIN_DIALOG_STATE']),
     ...mapActions(['changeDialogState', 'logout']),
     toast () {
-      this.$http.post('/api/logout', {}).then(res => {
+      this.$http.post('/api/logout', {
+        userName: this.userName
+      }).then(res => {
         this.$notify({
           title: '成功',
           message: '账号退出成功',
@@ -240,6 +241,6 @@ export default {
   color: white;
 }
 .tab-bar-search {
-  margin-left: 18%;
+  margin-left: 27%;
 }
 </style>

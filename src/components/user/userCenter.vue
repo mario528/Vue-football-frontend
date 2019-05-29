@@ -3,37 +3,53 @@
       <div class="user-center-box flex-column-x-center">
           <div class="user-detail flex-row-y-center">
               <div class="user-png">
-                  <img class="user-icon" :src="userIconUrl"/>
+                  <img class="user-icon" :src="isVisit?userIconUrl_v1:userIconUrl"/>
               </div>
               <div class="user-info flex-row-y-center">
                 <div class="vip flex-row-y-center">
                     <img class="vip-icon" src="../../assets/vip.png"/>
                 </div>
-                <span class="user-nickname flex-row-y-center">{{userName}}</span>
+                <span class="user-nickname flex-row-y-center">{{isVisit == true ? visitName : userName}}</span>
               </div>
               <button class="action-user-info" v-on:click="actionToChangeInfo">点击编辑个人资料</button>
           </div>
           <transition>
             <div class="user-detail flex-row" v-on:click="catchSwitchTab">
                 <div :class='currentIndex == 0 ?"user-tab-activity":"user-tab-normal"' id="0">
-                  我的帖子
+                  {{isVisit == true ? 'TA' : '我' }}的帖子
                   <div class="bottom-line" v-if="currentIndex == 0"></div>
                 </div>
                 <div :class='currentIndex == 1 ?"user-tab-activity":"user-tab-normal"' id="1">
-                  回复我的
+                  {{isVisit == true ? 'TA' : '我' }}的收藏
                   <div class="bottom-line" v-if="currentIndex == 1"></div>
                 </div>
                 <div :class='currentIndex == 2 ?"user-tab-activity":"user-tab-normal"' id="2">
-                  我的回复
+                  {{isVisit == true ? 'TA' : '我' }}的回复
                   <div class="bottom-line" v-if="currentIndex == 2"></div>
                 </div>
                 <div :class='currentIndex == 3 ?"user-tab-activity":"user-tab-normal"' id="3">
-                  我的收藏
+                  回复{{isVisit == true ? 'TA' : '我' }}的
                   <div class="bottom-line" v-if="currentIndex == 3"></div>
                 </div>
             </div>
           </transition>
           <div class="history-detail">
+             <div class="no-result" v-if="userPubLish.length == 0">
+                暂无内容
+              </div>
+            <div class="content flex-column" v-for="(item,index) in userPubLish" 
+                 v-bind:key="index" 
+                 :data-id="item.forum_id" 
+                 :data-forumName="item.content[0].forumName"
+                 v-on:click="actionToForum">
+              <div class="content-top">
+                  <div class="forum-title">{{item.content[0].forumTitle}}</div>
+              </div>
+              <div class="content-bottom flex-row-space-between">
+                <div class="forum-content">{{item.content[0].forumContent}}</div>
+                <div class="forum-content">{{item.content[0].time}}</div>
+              </div>
+            </div>
           </div>
       </div>
        <div class="favourite-team flex-column-x-center">
@@ -41,13 +57,13 @@
            <img  class="team-icon" src="../../assets/team_icon.png"/>
          </div>
          <div class="user-tab flex-row">
-           <span class="tab-item">
+           <span class="tab-item" :data-type="0" v-on:click="actionToUserFriend">
              <div class="tab-title">关注的人</div>
-             <div class="tab-num">100</div>
+             <div class="tab-num">{{userInfo.attentionNum}}</div>
            </span>
-           <span class="tab-item">
-             <div class="tab-title">我的粉丝</div>
-             <div class="tab-num">2000</div>
+           <span class="tab-item" :data-type="1" v-on:click="actionToUserFriend">
+             <div class="tab-title">{{isVisit == true ? 'TA' : '我' }}的粉丝</div>
+             <div class="tab-num">{{userInfo.followersNum}}</div>
            </span>
          </div>
       </div>
@@ -62,25 +78,68 @@ export default {
   props: {},
   data () {
     return {
-      currentIndex: 0
+      currentIndex: 0,
+      userInfo:{},
+      userPubLish: undefined,
+      isVisit: false
     }
   },
   watch: {},
   computed: {
     ...mapState([
-      'userName', 'userIconUrl'
+      'userName','userIconUrl'
     ])
   },
   methods: {
     catchSwitchTab (ev) {
-      this.currentIndex = ev.target.id
+      this.currentIndex = ev.target.id;
+      this.fetchUserCenter(this.currentIndex);
     },
     actionToChangeInfo () {
       this.$router.push('/userChangeInfo')
     },
+    fetchUserCenter(type) {
+      this.$http.post('/api/user/userCenter',{
+        username: this.isVisit == true ? this.visitName : this.userName,
+        type: type
+      }).then((res)=> {
+        const userInfo = res.data.userInfo;
+        this.userInfo = userInfo;
+        this.userIconUrl_v1 = userInfo.userImageUrl;
+        this.userPubLish = res.data.userInfo.userPubLish;
+      })
+    },
+    actionToForum(ev) {
+      const forumId = ev.currentTarget.dataset.id;
+      const forumName = ev.currentTarget.dataset.forumname;
+      this.$router.push({
+        path: '/forum/page',
+        query: {
+          forumId: forumId,
+          forumName: forumName
+        }
+      })
+    },
+    actionToUserFriend(ev) {
+       const friendType = ev.currentTarget.dataset.type;
+       this.$router.push({
+        path: '/user/friend',
+        query: {
+          userName: this.isVisit ? this.visitName : this.userName,
+          friendType: friendType
+        }
+      })
+    }
   },
-  created () {},
-  mounted () {}
+  created () {
+    if(this.$route.query.fromPage && this.$route.query.fromPage == 'forumPage' ) {
+       this.visitName = this.$route.query.userName
+       this.isVisit = true
+    }
+  },
+  mounted () {
+    this.fetchUserCenter(0);
+  }
 }
 </script>
 <style scoped>
@@ -148,7 +207,8 @@ export default {
 }
 .history-detail {
   width: 50vw;
-  height: 300px;
+  height: auto;
+  min-height: 200px;
   margin-top: 20px;
   background-color: #ffffff;
 }
@@ -188,5 +248,30 @@ export default {
   width: 20px;
   height: 20px;
   margin-left: 10px;
+}
+.content {
+  width: 100%;
+  padding: 5rpx;
+  border-bottom: 1px solid #eeeeee;
+}
+.forum-title {
+  color: #2962B6;
+  font-size: 14px;
+  padding: 10px 5px;
+}
+.forum-title:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.forum-content {
+  color: #919499;
+  font-size: 12px;
+  padding: 10px 5px;
+}
+.no-result {
+  font-size: 20px;
+  color: black;
+  text-align: center;
+  margin-top: 50px;
 }
 </style>

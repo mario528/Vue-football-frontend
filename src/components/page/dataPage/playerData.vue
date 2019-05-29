@@ -103,36 +103,13 @@
       <div class="flex-column">
         <div class="player-ability flex-column">
           <span class="player-invalid-title" id="title">球员基本数据</span>
-          <div class="player-ability-main">
+          <div class="player-ability-main flex-column-x-center">
             <!-- <canvas id="player-ability-canvas"></canvas> -->
             <div class="player-ability-main-item flex-column-center" id="ability">
               <div class="player-ability-title">综合能力</div>
               <div class="player-ability-content">{{abilityObj.ability}}</div>
             </div>
-            <div class="player-ability-main-item flex-column-x-center" id="defend">
-              <div class="player-ability-title">防御</div>
-              <div class="player-ability-content">{{abilityObj.defend}}</div>
-            </div>
-            <div class="player-ability-main-item flex-column-x-center" id="dribbling">
-              <div class="player-ability-title">盘带</div>
-              <div class="player-ability-content">{{abilityObj.dribbling}}</div>
-            </div>
-            <div class="player-ability-main-item flex-column-x-center" id="pass">
-              <div class="player-ability-title">传球</div>
-              <div class="player-ability-content">{{abilityObj.pass}}</div>
-            </div>
-            <div class="player-ability-main-item flex-column-x-center" id="shoot">
-              <div class="player-ability-title">射门</div>
-              <div class="player-ability-content">{{abilityObj.shoot}}</div>
-            </div>
-            <div class="player-ability-main-item flex-column-x-center" id="speed">
-              <div class="player-ability-title">速度</div>
-              <div class="player-ability-content">{{abilityObj.speed}}</div>
-            </div>
-            <div class="player-ability-main-item flex-column-x-center" id="strong">
-              <div class="player-ability-title">力量</div>
-              <div class="player-ability-content">{{abilityObj.strong}}</div>
-            </div>
+            <div id="play-radar-charts" :style="{width: '20vw', height: '40vw'}"></div>
           </div>
         </div>
       </div>
@@ -168,10 +145,78 @@ export default {
           this.abilityObj = playerData.abilityObj;
           this.invalidList = playerData.invalidList;
           this.honnerList = playerData.honnerList;
+        })
+        .then(() => {
+          let list = [];
+          let obj = {};
+          obj.name = this.playerName;
+          for (var key in this.abilityObj) {
+            if (key != "ability") {
+              list.push(this.abilityObj[key]);
+            }
+          }
+          obj.value = list;
+          this.drawRadarCharts("play-radar-charts", [obj]);
         });
     },
     canvasInit() {
       const canvas = document.getElementById("player-ability-canvas");
+    },
+    drawRadarCharts(id, data) {
+      data[0].itemStyle = {
+        itemStyle: {
+          normal: {
+            areaStyle: {
+              type: "default",
+              opacity: 0.8, // 图表中各个图区域的透明度
+              color: "#1686c2" // 图表中各个图区域的颜色
+            }
+          }
+        }
+      };
+      id = document.getElementById(id);
+      let playerAbilityCharts = this.$echarts.init(id);
+      playerAbilityCharts.setOption({
+        title: {
+          text: "球员数据雷达图"
+        },
+        tooltip: {},
+        radar: {
+          // shape: 'circle',
+          name: {
+            textStyle: {
+              color: "#fff",
+              backgroundColor: "#006400",
+              fontSize: 15,
+              borderRadius: 3,
+              padding: [3, 5]
+            }
+          },
+          indicator: [
+            { name: "速度", max: 100 },
+            { name: "力量", max: 100 },
+            { name: "防御", max: 100 },
+            { name: "盘带", max: 100 },
+            { name: "射门", max: 100 },
+            { name: "传球", max: 100 }
+          ],
+          splitLine: {
+            show: true,
+            lineStyle: {
+              width: 1,
+              color: "#fff" // 图表背景网格线的颜色
+            }
+          }
+        },
+        series: [
+          {
+            name: "预算 vs 开销（Budget vs spending）",
+            type: "radar",
+            // areaStyle: {normal: {}},
+            data: data
+          }
+        ]
+      });
     }
   },
   created() {
@@ -316,6 +361,9 @@ export default {
 .player-honner-item {
   background-color: #fafafa;
   border-bottom: 2px solid #eeeeee;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 .player-honner-item span {
   font-size: 16px;
@@ -328,6 +376,7 @@ export default {
 }
 .player-honner-text {
   width: 20vw;
+  height: auto;
 }
 .player-ability-content {
   font-size: 16px;
@@ -342,5 +391,9 @@ export default {
   width: 100%;
   height: 100px;
   font-size: 16px;
+}
+.radar-map {
+  width: 40vw;
+  height: 40vw;
 }
 </style>

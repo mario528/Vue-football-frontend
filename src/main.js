@@ -37,6 +37,13 @@ Vue.prototype.$socket = socket
 socket.on('connect',function() {
   console.log('链接成功')
 })
+socket.on('returnMsg',function(data) {
+  Vue.prototype.$message({
+    type: "success",
+    message: data
+ });
+  console.log(data)
+})
 // 路由守卫
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.needLogin)) { // 判断该路由是否需要登录权限

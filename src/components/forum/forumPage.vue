@@ -5,7 +5,10 @@
         <div class="forum-title">{{content[0].forumTitle}}</div>
         <div class="flex-row-y-center forum-title-right">
           <div class="forum-title-btn" v-on:click="actionOnlyPublisher">只看楼主</div>
-          <div class="forum-title-btn">收藏</div>
+          <div
+            class="forum-title-btn"
+            v-on:click="collectForum"
+          >{{isCollection == true ? '已收藏' : '收藏'}}</div>
           <div class="forum-title-btn flex-row-y-center">
             <img src="../../assets/reply_icon.png" class="forum-title-btn-img">
             回复
@@ -21,7 +24,34 @@
           <div class="item-left flex-column-x-center">
             <div class="user-flag" v-if="item.type == 0"></div>
             <div class="user-flag-text" v-if="item.type == 0">楼主</div>
-            <div class="user-icon-border flex-column-center">
+            <div
+              class="user-icon-border flex-column-center"
+              :id="index"
+              v-on:mouseover="mouseover"
+              v-on:mouseleave="mouseLeave"
+            >
+              <div class="user-detail flex-column" v-if="item.isShow">
+                <img src="../../assets/beijing_banner.jpg" class="detail-banner">
+                <div class="flex-row detail-btn-view">
+                   <div
+                      v-on:click="actionAttention"
+                      class="attention-btn"
+                      :data-followName="item.jordansw"
+                    >关注</div>
+                     <div
+                      v-on:click="actionSendMessage"
+                      class="attention-btn"
+                      :data-followName="item.jordansw"
+                      :data-jordansw="item.jordansw"
+                    >私信</div>
+                </div>
+                <div class="flex-row-space-around">
+                  <img :src="item.userIcon" class="user-detail-icon">
+                  <div class="flex-column-center">
+                    <div class="user-detail-name" v-on:click="actionToUserCenter(item.jordansw)">{{item.jordansw}}</div>
+                  </div>
+                </div>
+              </div>
               <img :src="item.userIcon" class="user-icon">
             </div>
             <div class="user-name">{{item.jordansw}}</div>
@@ -55,13 +85,16 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import { clearInterval } from "timers";
 export default {
   name: "forumPage",
   components: {},
   props: {},
   data() {
     return {
-      content: []
+      content: [],
+      isCollection: false,
+      timer: null
     };
   },
   watch: {},
@@ -73,11 +106,16 @@ export default {
       this.$http
         .post("/api/forum/forumPage", {
           pageId: this.pageId,
-          forumName: this.forumName
+          forumName: this.forumName,
+          userName: this.userName
         })
         .then(res => {
           const data = res.data.data.data;
           this.content = data.content;
+          this.isCollection = res.data.data.isCollection;
+          this.content.forEach(element => {
+            this.$set(element, "isShow", false);
+          });
         });
     },
     actionToPublish() {
@@ -96,8 +134,8 @@ export default {
             this.clearInput();
             this.$message({
               message: `回复成功`,
-              type: 'success'
-            })
+              type: "success"
+            });
             this.fetchForumData();
           }
         });
@@ -106,16 +144,72 @@ export default {
       this.forumContent = "";
       this.forumTitle = "";
     },
-    actionOnlyPublisher() {
-      
+    actionOnlyPublisher() {},
+    collectForum() {
+      if (this.isCollection == true) {
+        return;
+      }
+      this.$http
+        .post("/api/forum/collection", {
+          userName: this.userName,
+          forumName: this.forumName,
+          pageId: this.pageId
+        })
+        .then(res => {
+          if (res.data.state == true) {
+            this.isCollection = true;
+          }
+        });
+    },
+    mouseover(ev) {
+      const index = ev.currentTarget.id;
+      this.content[Number(index)].isShow = true;
+    },
+    mouseLeave(ev) {
+      const index = ev.currentTarget.id;
+      this.content[Number(index)].isShow = false;
+    },
+    clearTimer() {
+      clearInterval(this.timer);
+      this.timer = null;
+    },
+    actionAttention(ev) {
+      const followName = ev.currentTarget.dataset.followname;
+      this.$http
+        .post("/api/user/attention", {
+          followerName: followName,
+          beFollowedName: this.userName
+        })
+        .then(res => {});
+    },
+    actionToUserCenter(userName) {
+      this.$router.push({
+        path: '/userCenter',
+        query: {
+          fromPage: 'forumPage',
+          userName: userName
+        }
+      })
+    },
+    actionSendMessage(ev) {
+      const jordansw = ev.currentTarget.dataset.jordansw;
+      this.$router.push({
+        path: '/user/chat',
+        query: {
+          userName: this.userName,
+          jordansw: jordansw
+        }
+      })
     }
   },
   created() {
-    this.pageId = this.$route.params.pageId;
-    this.forumName = this.$route.params.forumName;
+    this.pageId = this.$route.query.forumId;
+    this.forumName = this.$route.query.forumName;
     this.fetchForumData();
   },
-  mounted() {}
+  mounted() {
+    this.timer = setInterval(() => {}, 1000);
+  }
 };
 </script>
 <style scoped>
@@ -126,6 +220,7 @@ export default {
 .froum-main {
   width: 60vw;
   height: auto;
+  margin-top: 60px;
 }
 .forum-page-title {
   width: 100%;
@@ -143,6 +238,8 @@ export default {
   padding: 5px 10px;
   margin-right: 10px;
   border: 1px solid #eeeeee;
+  cursor: pointer;
+  border-radius: 5px;
 }
 .forum-title-btn-img {
   width: 15px;
@@ -177,6 +274,7 @@ export default {
 .user-icon {
   width: 80px;
   height: 80px;
+  cursor: pointer;
 }
 .user-name {
   margin-top: 20px;
@@ -243,8 +341,54 @@ export default {
 }
 .forum-publish-btn {
   text-align: center;
+  margin-top: 20px;
 }
 .forum-publish-textarea {
   margin-top: 20px;
+}
+.user-detail {
+  width: 150%;
+  height: 150px;
+  position: absolute;
+  top: -120px;
+  left: -25%;
+  background-color: whitesmoke;
+  z-index: 200;
+}
+.user-detail-icon {
+  border: 2px solid white;
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 5px;
+  position: absolute;
+  top: 20%;
+  left: 5px;
+
+}
+.user-detail-name {
+  font-size: 14px;
+  padding: 5px 0px;
+  margin: 5px;
+  cursor: pointer;
+}
+.attention-btn {
+  padding: 2px 10px;
+  border: 1px solid rgb(82, 173, 75);
+  background-color: rgb(82, 173, 75);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left:10px; 
+}
+.detail-banner {
+  width: 100%;
+  height: 50%;
+}
+.detail-btn-view {
+  position: absolute;
+  top: 30%;
+  right: 10px;
 }
 </style>

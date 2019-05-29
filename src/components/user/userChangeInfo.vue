@@ -8,19 +8,22 @@
           <img class="user-icon" :src="userIconUrl">
           <div class="upload-detail">
             <span class="upload-tips">支持jpg,png,jpeg格式大小5M以内的图片</span>
-            <el-upload
-              class="upload-demo"
-              action="/api/loadUserIcon"
-              :data="uploadData"
-              :on-remove="handleRemove"
-              :before-upload="beforeUpload"
-              :before-remove="beforeRemove"
-              :onSuccess="uploadSuccess"
-              :limit="1"
-              :on-exceed="handleExceed"
-            >
-              <el-button slot="trigger" size="small" type="primary" class="file-btn">选择新头像</el-button>
-            </el-upload>
+            <div>
+              <el-upload
+                class="avatar-uploader"
+                action="/api/loadUserIcon"
+                :data="uploadData"
+                :on-remove="handleRemove"
+                :before-upload="beforeUpload"
+                :before-remove="beforeRemove"
+                :onSuccess="uploadSuccess"
+                :show-file-list="false"
+                :limit="1"
+                :on-exceed="handleExceed"
+              >
+                <el-button slot="trigger" size="small" type="primary" class="file-btn">选择新头像</el-button>
+              </el-upload>
+            </div>
           </div>
         </div>
       </div>
@@ -82,12 +85,12 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
-  name: 'userChangeInfo',
+  name: "userChangeInfo",
   components: {},
   props: {},
-  data () {
+  data() {
     return {
       username: undefined,
       sex: undefined,
@@ -96,103 +99,103 @@ export default {
       infoList: [],
       changeContent: undefined,
       keyMap: [
-        { key: 'password' },
-        { key: 'phoneNumber' },
-        { key: 'selfIntroduce' },
-        { key: 'sex' }
+        { key: "password" },
+        { key: "phoneNumber" },
+        { key: "selfIntroduce" },
+        { key: "sex" }
       ],
       userInput: undefined
-    }
+    };
   },
   watch: {},
   computed: {
-    ...mapState(['userName', 'userIconUrl']),
-    ...mapGetters(['getUsername']),
-    ...mapActions(['setUsername'])
+    ...mapState(["userName", "userIconUrl"]),
+    ...mapGetters(["getUsername"]),
+    ...mapActions(["setUsername"])
   },
   methods: {
-    ...mapActions(['setUserIconUrl']),
-    beforeUpload (file) {
-      this.uploadData.userName = this.userName
-      console.log('文件名：' + file.name)
-      this.files = file
-      const fileType1 = file.name.split('.')[1] === 'jpg'
-      const fileType2 = file.name.split('.')[1] === 'png'
-      const fileType3 = file.name.split('.')[1] === 'jpeg'
+    ...mapActions(["setUserIconUrl"]),
+    beforeUpload(file) {
+      this.uploadData.userName = this.userName;
+      console.log("文件名：" + file.name);
+      this.files = file;
+      const fileType1 = file.name.split(".")[1] === "jpg";
+      const fileType2 = file.name.split(".")[1] === "png";
+      const fileType3 = file.name.split(".")[1] === "jpeg";
       if (fileType1 === false && fileType2 === false && fileType3 === false) {
         this.$notify.error({
-          title: '错误',
-          message: '只支持上传以jpg,png,jpeg结尾的图片类型'
-        })
-        return false
+          title: "错误",
+          message: "只支持上传以jpg,png,jpeg结尾的图片类型"
+        });
+        return false;
       }
       if (file.size / 1024 / 1024 > 5) {
         this.$notify.error({
-          title: '错误',
-          message: '只支持上传小于5M大小的图片'
-        })
-        return false
+          title: "错误",
+          message: "只支持上传小于5M大小的图片"
+        });
+        return false;
       }
     },
-    actionToChangeInfo (event) {
-      const currentPage = event.currentTarget.id
-      console.log(this.infoList[Number(currentPage)])
-      this.$set(this.infoList[Number(currentPage)], 'isShow', true)
+    actionToChangeInfo(event) {
+      const currentPage = event.currentTarget.id;
+      console.log(this.infoList[Number(currentPage)]);
+      this.$set(this.infoList[Number(currentPage)], "isShow", true);
     },
-    actionToOperation (event) {},
-    actionToLoadHeadIcon () {
-      console.log('上传图片')
+    actionToOperation(event) {},
+    actionToLoadHeadIcon() {
+      console.log("上传图片");
     },
     // 成功上传后的回调函数
-    uploadSuccess (res) {
+    uploadSuccess(res) {
       if (res.data.state === 1) {
-        this.setUserIconUrl(res.data.userIcon)
+        this.setUserIconUrl(res.data.userIcon);
       }
     },
     // 请求用户信息
-    fetchUserInformation (name) {
-      const that = this
+    fetchUserInformation(name) {
+      const that = this;
       this.$http
-        .post('/api/user/information', {
+        .post("/api/user/information", {
           username: name
         })
         .then(res => {
-          console.log(res)
-          const data = res.data.data
-          this.infoList = data.infoList
-          this.userInfo = data.userInfo
+          console.log(res);
+          const data = res.data.data;
+          this.infoList = data.infoList;
+          this.userInfo = data.userInfo;
           this.infoList.forEach(element => {
-            that.$set(element, 'isShow', false)
-          })
-        })
+            that.$set(element, "isShow", false);
+          });
+        });
     },
-    cancelChange (ev) {
-      this.changeContent = undefined
-      const currentIndex = ev.currentTarget.id
-      this.$set(this.infoList[Number(currentIndex)], 'isShow', false)
+    cancelChange(ev) {
+      this.changeContent = undefined;
+      const currentIndex = ev.currentTarget.id;
+      this.$set(this.infoList[Number(currentIndex)], "isShow", false);
     },
-    saveChange (ev) {
-      const that = this
-      const currentIndex = ev.currentTarget.id
-      this.$set(this.infoList[Number(currentIndex)], 'isShow', false)
-      const key = this.keyMap[currentIndex].key
+    saveChange(ev) {
+      const that = this;
+      const currentIndex = ev.currentTarget.id;
+      this.$set(this.infoList[Number(currentIndex)], "isShow", false);
+      const key = this.keyMap[currentIndex].key;
       this.$http
-        .post('/api/changeUserInfo', {
+        .post("/api/changeUserInfo", {
           userName: this.userName,
           changeContent: this.changeContent,
           type: currentIndex // 0: 密码 1: 手机号 2: 自我介绍 3: 性别
         })
         .then(res => {
-          this.changeContent = ''
-          this.fetchUserInformation(this.userName)
-        })
+          this.changeContent = "";
+          this.fetchUserInformation(this.userName);
+        });
     }
   },
-  created () {
-    this.fetchUserInformation(this.userName)
+  created() {
+    this.fetchUserInformation(this.userName);
   },
-  mounted () {}
-}
+  mounted() {}
+};
 </script>
 <style scoped>
 .container {
@@ -275,7 +278,8 @@ export default {
 .grey {
   color: grey;
 }
-.el-upload-list,.el-upload-list--text {
+.el-upload-list,
+.el-upload-list--text {
   display: none;
 }
 </style>
