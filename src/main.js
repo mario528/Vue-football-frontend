@@ -43,7 +43,8 @@ socket.on('returnMsg',function(data) {
     message: data
  });
   console.log(data)
-})
+});
+
 // 路由守卫
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.needLogin)) { // 判断该路由是否需要登录权限

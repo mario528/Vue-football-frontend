@@ -84,8 +84,7 @@
             </div>
             <div class="found-of-forum">
               <div class="found-by flex-row">
-                <img :src="forumInfo.forumFollowers[0].userIcon" 
-                     class="user-icon">
+                <img :src="forumInfo.forumFollowers[0].userIcon" class="user-icon">
                 <div class="found-by-title">吧主</div>
                 <div class="flex-row">
                   <img src="../../assets/is_vip.png" v-if="isVip" class="vip-icon">
@@ -186,6 +185,8 @@ export default {
             that.isFollower = true;
           } else {
           }
+        }).then(()=> {
+          this.fetchForumHomePage()
         });
     },
     actionToPublish() {
@@ -212,7 +213,7 @@ export default {
     },
     actionReplyForum(id) {
       this.$router.push({
-        path: '/forum/page',
+        path: "/forum/page",
         query: {
           forumId: id,
           forumName: this.searchForum
@@ -232,6 +233,9 @@ export default {
         .then(res => {
           const status = res.data.status;
           if (status == true) this.isFollower = false;
+        })
+        .then(() => {
+          this.fetchForumHomePage();
         });
     }
   },
@@ -239,8 +243,7 @@ export default {
     this.searchForum = this.$route.query.forumName;
     this.fetchForumHomePage();
   },
-  mounted() {
-  }
+  mounted() {}
 };
 </script>
 <style scoped>

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-19 17:01:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-04-29 13:41:32
+ * @LastEditTime: 2019-06-01 02:45:59
  * @Description: file content
  -->
 <template>
@@ -141,7 +141,9 @@ export default {
     };
   },
   watch: {},
-  computed: {},
+  computed: {
+    ...mapState(["isLogin", "userName", "userIconUrl"])
+  },
   methods: {
     ...mapActions([
       "changeDialogState",
@@ -164,7 +166,7 @@ export default {
             from: "msite_com"
           }
         })
-        .then((result) => {
+        .then(result => {
           result.data.content.rounds[0].content.data.forEach(element => {
             item.push(element.team_name);
             console.log(item);
@@ -189,25 +191,38 @@ export default {
           teamName: teamName
         }
       });
+    },
+    fetchHomePageSuggest() {
+      this.$http
+        .post("/api/user/suggest", {
+          userName: this.isLogin ? this.userName : null
+        })
+        .then(res => {
+        });
     }
   },
   created() {
-    this.getRank("china", (res) => {
+    this.getRank("china", res => {
       this.headerList = res.data.content.rounds[0].content.header;
       this.rankContent = res.data.content.rounds[0].content.data;
     });
-    this.$http.get("/api/home").then(result => {
-      this.bannerList = result.data.data.banner;
-      this.hotMatchList = result.data.data.hotMathch;
-      if (result.data.data.userInfo) {
-        const userInfo = result.data.data.userInfo;
-        const username = userInfo.username;
-        const userImageUrl = userInfo.userImageUrl;
-        this.login();
-        this.setUsername(username);
-        this.setUserIconUrl(userImageUrl);
-      }
-    });
+    this.$http
+      .get("/api/home")
+      .then(result => {
+        this.bannerList = result.data.data.banner;
+        this.hotMatchList = result.data.data.hotMathch;
+        if (result.data.data.userInfo) {
+          const userInfo = result.data.data.userInfo;
+          const username = userInfo.username;
+          const userImageUrl = userInfo.userImageUrl;
+          this.login();
+          this.setUsername(username);
+          this.setUserIconUrl(userImageUrl);
+        }
+      })
+      .then(() => {
+        this.fetchHomePageSuggest();
+      });
   },
   mounted() {}
 };

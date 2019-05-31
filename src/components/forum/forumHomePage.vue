@@ -39,6 +39,19 @@
       </div>
     </div>
     <div class="forum-content"></div>
+    <div class="forum-list">
+      <div class="forum-hot-list">论坛热议榜</div>
+      <div v-for="(item,index) in forumRankList" 
+           :key="index" 
+           class="flex-row-space-between row"
+           @click="actionForumPageByName(item.forumName)">
+        <div>
+          <span :class="index <= 2 ? 'space-num' : 'common-num'">{{index + 1}}</span>
+          <span class="forum-name">{{item.forumName}}</span>
+        </div>
+        <div class="hot-num">{{item.forumFollowerNum}}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -69,6 +82,7 @@ export default {
         .then(res => {
           const data = res.data.data;
           this.forumList = data.userInfo.favForumList;
+          this.forumRankList = data.forumList;
         });
     },
     querySearchAsync(queryString, callback) {
@@ -200,7 +214,7 @@ export default {
   margin-left: 1vw;
   margin-top: 10px;
   box-sizing: border-box;
-  background-color: rgba(152,251,152, .2);
+  background-color: rgba(152, 251, 152, 0.2);
   border: 2px solid #eeeeee;
   text-align: start;
   display: inline-block;
@@ -213,7 +227,8 @@ export default {
 }
 .forum-content {
   width: 46vw;
-  height: 500px;
+  height: auto;
+  min-height: 600px;
   float: left;
   margin-top: 30px;
   margin-left: 30px;
@@ -232,5 +247,58 @@ export default {
   font-size: 12px;
   color: gray;
   padding-top: 20px;
+}
+.forum-list {
+  float: left;
+  margin-left: 30px;
+  margin-top: 30px;
+  width: 20vw;
+  height: auto;
+  min-height: 400px;
+  background-color: #fff;
+}
+.forum-hot-list {
+  font-size: 16px;
+  color: #444444;
+  font-weight: 500;
+  background-color: #fbfbfb;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.space-num {
+  background-color: #ff7f42;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  margin-left: 10px;
+}
+.common-num {
+  background-color: transparent;
+  color: #666666;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  margin-left: 10px;
+}
+.forum-name {
+  font-size: 12px;
+  color: #666666;
+  font-weight: 500;
+  margin-left: 20px;
+  cursor: pointer;
+}
+.row {
+  margin-bottom: 5px;
+  border-bottom: 1px solid #eeeeee;
+  padding: 10px 0px;
+  width: 100%;
+  cursor: pointer;
+}
+.hot-num {
+  font-size: 12px;
+  color: #999999;
+  margin-right: 20px;
+  font-weight: 500;
 }
 </style>
