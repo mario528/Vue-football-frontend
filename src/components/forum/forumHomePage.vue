@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <div class="forum-input flex-row-center">
-      <img src="../../assets/logo_pron.png" class="forum-icon">
+      <img src="../../assets/logo_pron.png" class="forum-icon-com">
       <el-autocomplete
         type="text"
         class="forum-home-input"
@@ -21,7 +21,7 @@
       <div class="forum-user-title flex-row-y-center">
         <img :src="userIconUrl" class="user-icon">
         <div class="user-title" v-on:click="actionUserCenter">
-          <span class="user-name">用户名:{{userName}}</span>
+          <span class="user-name">用户名: {{userName}}</span>
         </div>
       </div>
       <div class="forum-user">
@@ -38,13 +38,48 @@
         <div v-if="forumList.length == 0" class="no-forum-list">您暂时还未关注任何球队的球迷圈哦，去加入一个吧</div>
       </div>
     </div>
-    <div class="forum-content"></div>
+    <div class="forum-content">
+      <div class="banner">
+        <swiper :options="swiperOption" class="homepage-swiper">
+          <swiper-slide v-for="(item,index) in bannerList" v-bind:key="index">
+            <img class="swiper-item-img" v-bind:src="item">
+          </swiper-slide>
+          <div class="swiper-pagination" slot="pagination"></div>
+          <div class="swiper-button-prev" slot="button-prev"></div>
+          <div class="swiper-button-next" slot="button-next"></div>
+          <div class="swiper-scrollbar" slot="scrollbar"></div>
+        </swiper>
+      </div>
+      <div class="suggest-title">猜你喜欢</div>
+      <div class="suggest-content">
+        <div class="suggest-content-item" v-for="(item,index) in hotSuggest" :key="index">
+          <div class="forum-name-text">{{item[0].forumName}}吧</div>
+          <div class="forum-title-text">{{item[0].forumTitle}}</div>
+          <div class="forum-content-text">{{item[0].forumContent}}</div>
+          <div class="forum-user-text flex-row-y-center">
+            <img :src="item[0].userIcon" class="forum-icon">
+            <span>{{item[0].jordansw}}</span>
+          </div>
+        </div>
+        <div v-for="(item,index) in userPubLish" :key="index" class="suggest-content-item">
+          <div class="forum-name-text">{{item.content[0].forumName}}吧</div>
+          <div class="forum-title-text">{{item.content[0].forumTitle}}</div>
+          <div class="forum-content-text">{{item.content[0].forumContent}}</div>
+          <div class="forum-user-text flex-row-y-center">
+            <img :src="item.content[0].userIcon" class="forum-icon">
+            <span>{{item.content[0].jordansw}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="forum-list">
       <div class="forum-hot-list">论坛热议榜</div>
-      <div v-for="(item,index) in forumRankList" 
-           :key="index" 
-           class="flex-row-space-between row"
-           @click="actionForumPageByName(item.forumName)">
+      <div
+        v-for="(item,index) in forumRankList"
+        :key="index"
+        class="flex-row-space-between row"
+        @click="actionForumPageByName(item.forumName)"
+      >
         <div>
           <span :class="index <= 2 ? 'space-num' : 'common-num'">{{index + 1}}</span>
           <span class="forum-name">{{item.forumName}}</span>
@@ -63,9 +98,28 @@ export default {
   props: {},
   data() {
     return {
+      swiperOption: {
+        speed: 1000,
+        loop: true,
+        autoplay: true,
+        grabCursor: true,
+        autoplayDisableOnInteraction: false,
+        stopOnLastSlide: false,
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev"
+        }
+      },
       forumList: [],
       userInput: "",
-      hasResult: false
+      hasResult: false,
+      bannerList: [],
+      hotSuggest: [],
+      userPubLish: []
     };
   },
   watch: {},
@@ -83,6 +137,10 @@ export default {
           const data = res.data.data;
           this.forumList = data.userInfo.favForumList;
           this.forumRankList = data.forumList;
+          this.bannerList = data.banner;
+        })
+        .then(() => {
+          this.fetchHomePageSuggest();
         });
     },
     querySearchAsync(queryString, callback) {
@@ -125,6 +183,28 @@ export default {
           forumName: forumName
         }
       });
+    },
+    actionToForum(ev) {
+      const forumId = ev.currentTarget.dataset.id;
+      const forumName = ev.currentTarget.dataset.forumname;
+      this.$router.push({
+        path: "/forum/page",
+        query: {
+          forumId: forumId,
+          forumName: forumName
+        }
+      });
+    },
+    fetchHomePageSuggest() {
+      this.$http
+        .post("/api/user/suggest", {
+          userName: this.isLogin ? this.userName : null
+        })
+        .then(res => {
+          const data = res.data.data;
+          this.hotSuggest = data.hotSuggest;
+          this.userPubLish = data.userPubLish;
+        });
     }
   },
   created() {},
@@ -136,7 +216,8 @@ export default {
 <style scoped>
 .app {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   /* background-image: url('../../assets/forum_bg.jpeg'); */
   background-size: 100% 100%;
   background-color: #eeeeee;
@@ -171,7 +252,7 @@ export default {
   font-size: 16px;
   font-weight: 500;
 }
-.forum-icon {
+.forum-icon-com {
   width: 120px;
   height: 40px;
 }
@@ -228,7 +309,7 @@ export default {
 .forum-content {
   width: 46vw;
   height: auto;
-  min-height: 600px;
+  min-height: 800px;
   float: left;
   margin-top: 30px;
   margin-left: 30px;
@@ -300,5 +381,59 @@ export default {
   color: #999999;
   margin-right: 20px;
   font-weight: 500;
+}
+.banner {
+  width: 100%;
+  height: 200px;
+}
+.homepage-swiper {
+  width: 100%;
+  height: 200px;
+}
+.swiper-item-img {
+  width: 46vw;
+}
+
+.suggest-content-item {
+  padding: 5px 30px;
+  border-bottom: 1px solid #eeeeee;
+}
+.forum-name-text {
+  font-size: 16px;
+  color: #444444;
+  padding: 2.5px 0px;
+}
+.forum-title-text {
+  font-size: 16px;
+  color: #005097;
+  padding: 2.5px 0px;
+}
+.forum-content-text {
+  font-size: 14px;
+  color: #666666;
+  padding: 2.5px 0px;
+}
+.forum-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+.forum-user-text {
+  padding: 5px 0px;
+}
+.forum-user-text span {
+  font-size: 14px;
+  color: #999999;
+  margin-left: 10px;
+}
+.suggest-title {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: rgb(82, 173, 75);
+  font-weight: 500;
+  background: linear-gradient(to left, transparent 98%, #2e8b57 2%);
+  border-bottom: 1px solid #eeeeee;
 }
 </style>

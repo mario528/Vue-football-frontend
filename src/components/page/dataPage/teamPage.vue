@@ -113,6 +113,7 @@
       </div>
     </div>
     <div class="team-content" v-if="currentIndex == 1">
+      <!-- <div class="team-banner"></div> -->
       <div class="team-list">
         <div class="title">{{teamName}}球员名单</div>
         <div class="team-member flex-column">
@@ -683,5 +684,18 @@ export default {
 }
 .team-schedule-content {
   border: 1px solid #eeeeee;
+}
+.team-banner {
+  position: fixed;
+  top: 85px;
+  left: 67px;
+  background-image: url("../../../assets/team_flag.jpg");
+  background-size: 100% 100%;
+  width: 100%;
+  height: 40%;
+  z-index: -1;
+}
+.bg {
+  width: 100%;
 }
 </style>

@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-05 18:18:24
  * @LastEditors: majiaao
- * @LastEditTime: 2019-05-28 00:04:48
+ * @LastEditTime: 2019-06-01 21:18:07
  * @Description: file content
  -->
 <template>
@@ -102,6 +102,20 @@ export default {
       })
     },
     catchSwitchTab (ev) {
+      if(!this.isLogin && ev.target.id == 2) {
+        this.currentIndex = 0
+        this.$notify.error({
+          title: "",
+          message: "请先登录，再去球迷圈发言哦～"
+        });
+        const obj = {
+          target: {
+            id: 0
+          }
+        }
+        this.changeDialogStateBox(obj)
+        return;
+      }
       this.currentIndex = ev.target.id
     },
     changeDialogStateBox (ev) {

@@ -96,7 +96,6 @@ export default {
             username: this.userName,
             friendName: friendName
         }).then((res)=> {
-            debugger
         })
     },
     actionToUserCenter(userName) {

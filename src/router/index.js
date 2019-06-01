@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2018-12-31 22:40:41
  * @LastEditors: majiaao
- * @LastEditTime: 2019-05-28 00:53:34
+ * @LastEditTime: 2019-06-01 19:29:38
  * @Description: file content
  */
 import Vue from 'vue'
@@ -21,6 +21,7 @@ import forumPage from '@/components/forum/forumPage'
 import playerData from '@/components/page/dataPage/playerData'
 import userFriend from '@/components/user/userFriend'
 import messagePage from '@/components/user/messagePage'
+import forumTypes from '@/components/forum/forumTypes'
 Vue.use(Router)
 
 export default new Router({
@@ -97,6 +98,11 @@ export default new Router({
       path: '/user/chat',
       name: messagePage,
       component: messagePage
+    },
+    {
+      path: '/forum/type',
+      name: forumTypes,
+      component: forumTypes
     },
     {
       path: '*',

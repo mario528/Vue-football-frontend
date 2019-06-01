@@ -6,8 +6,8 @@
     </div>
     <div class="forum-main" v-if="!noForum">
       <div class="forum-title flex-row-y-center">
-        <div class="forum-icon">
-          <img :src="forumInfo.forumIcon" class="forumIcon">
+        <div class="forumIcon">
+          <img :src="forumInfo.forumIcon">
         </div>
         <div class="flex-column forum-title-content">
           <div class="flex-row-y-center">
@@ -95,8 +95,16 @@
             </div>
           </div>
           <div class="forum-mine">
-            <div class="forum-about-title">我在贴吧</div>
-            <div class="forum-mine"></div>
+            <div class="forum-about-title">贴吧分类</div>
+            <div class="forum-mine" style="margin-left:5px;">
+              <el-tag
+                style="margin-right:5px; margin-bottom:10px;"
+                v-for="(item,index) in suggestForumType"
+                :key="index"
+                type="success"
+                v-on:click.native="actionJumpForumList(item)"
+              >{{item}}</el-tag>
+            </div>
           </div>
         </div>
       </div>
@@ -138,7 +146,8 @@ export default {
       forumTitle: "",
       forumContent: "",
       titleTips: false,
-      noForum: true
+      noForum: true,
+      suggestForumType: []
     };
   },
   watch: {},
@@ -169,6 +178,7 @@ export default {
             this.forumInfo = data.forumInfo;
             this.invitation = data.invitation;
             this.isFollower = data.isFollower;
+            this.suggestForumType = data.suggest_forum_type;
           }
         });
     },
@@ -185,8 +195,9 @@ export default {
             that.isFollower = true;
           } else {
           }
-        }).then(()=> {
-          this.fetchForumHomePage()
+        })
+        .then(() => {
+          this.fetchForumHomePage();
         });
     },
     actionToPublish() {
@@ -237,6 +248,14 @@ export default {
         .then(() => {
           this.fetchForumHomePage();
         });
+    },
+    actionJumpForumList(type) {
+      this.$router.push({
+        path: "/forum/type",
+        query: {
+          type: type
+        }
+      });
     }
   },
   created() {
@@ -483,6 +502,10 @@ export default {
   border-radius: 10px;
   margin-left: 5vw;
   margin-top: 5vw;
+}
+.forumIcon img {
+  width: 120px;
+  height: 120px;
 }
 .forum-introduce {
   font-size: 16px;

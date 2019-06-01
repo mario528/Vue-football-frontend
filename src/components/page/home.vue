@@ -2,7 +2,7 @@
  * @Author: majiaao
  * @Date: 2019-01-19 17:01:56
  * @LastEditors: majiaao
- * @LastEditTime: 2019-06-01 02:45:59
+ * @LastEditTime: 2019-06-01 17:50:46
  * @Description: file content
  -->
 <template>
@@ -49,7 +49,29 @@
       </div>
     </div>
     <div class="homepage-content flex-row">
-      <div class="homepage-news"></div>
+      <div class="homepage-news">
+        <div class="suggest-title">猜你喜欢</div>
+        <div class="suggest-content">
+          <div class="suggest-content-item" v-for="(item,index) in hotSuggest" :key="index">
+            <div class="forum-name-text">{{item[0].forumName}}吧</div>
+            <div class="forum-title-text">{{item[0].forumTitle}}</div>
+            <div class="forum-content-text">{{item[0].forumContent}}</div>
+            <div class="forum-user-text flex-row-y-center">
+              <img :src="item[0].userIcon" class="forum-icon">
+              <span>{{item[0].jordansw}}</span>
+            </div>
+          </div>
+          <div v-for="(item,index) in userPubLish" :key="index" class="suggest-content-item">
+            <div class="forum-name-text">{{item.content[0].forumName}}吧</div>
+            <div class="forum-title-text">{{item.content[0].forumTitle}}</div>
+            <div class="forum-content-text">{{item.content[0].forumContent}}</div>
+            <div class="forum-user-text flex-row-y-center">
+              <img :src="item.content[0].userIcon" class="forum-icon">
+              <span>{{item.content[0].jordansw}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="homepage-rank" v-on:click="actionTochangeType">
         <div class="rank-swiper">
           <li
@@ -137,7 +159,9 @@ export default {
       rankContent: [],
       headerList: [],
       leagueType: "china",
-      hotMatchList: []
+      hotMatchList: [],
+      hotSuggest: [],
+      userPubLish: []
     };
   },
   watch: {},
@@ -198,6 +222,9 @@ export default {
           userName: this.isLogin ? this.userName : null
         })
         .then(res => {
+          const data = res.data.data;
+          this.hotSuggest = data.hotSuggest;
+          this.userPubLish = data.userPubLish;
         });
     }
   },
@@ -379,7 +406,50 @@ export default {
 }
 .homepage-news {
   width: 50vw;
-  height: 400px;
-  background-color: sandybrown;
+  height: auto;
+  min-height: 400px;
+  border-left: 1px solid #eeeeee;
+}
+
+.suggest-content-item {
+  padding: 5px 30px;
+  border-bottom: 1px solid #eeeeee;
+}
+.forum-name-text {
+  font-size: 16px;
+  color: #444444;
+  padding: 2.5px 0px;
+}
+.forum-title-text {
+  font-size: 16px;
+  color: #005097;
+  padding: 2.5px 0px;
+}
+.forum-content-text {
+  font-size: 14px;
+  color: #666666;
+  padding: 2.5px 0px;
+}
+.forum-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+.forum-user-text {
+  padding: 5px 0px;
+}
+.forum-user-text span {
+  font-size: 14px;
+  color: #999999;
+  margin-left: 10px;
+}
+.suggest-title {
+  width: 100%;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  font-weight: 500;
+  background: rgb(82, 173, 75);
+  border-bottom: 1px solid #eeeeee;
 }
 </style>
